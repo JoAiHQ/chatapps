@@ -18,4 +18,17 @@ export default defineConfig({
       }
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'scripts.js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name?.endsWith('.css')) {
+            return 'styles.css'
+          }
+          return assetInfo.name || 'assets/[name].[ext]'
+        },
+      },
+    },
+  },
 })
