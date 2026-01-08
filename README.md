@@ -1,6 +1,6 @@
 # ChatGPT Apps SDK Builder
 
-Build and serve individual ChatGPT apps compliant with the OpenAI Apps SDK.
+A development environment for building chat app UIs—create UIs for your Warps and ChatGPT apps in general.
 
 ## Project Structure
 
@@ -51,3 +51,13 @@ Access at: `http://localhost:3000/<appname>`
 - Tailwind CSS purged to only used classes
 - ~320KB per app (minified, includes React, ReactDOM, OpenAI SDK UI, Tailwind)
 - Compatible with ChatGPT iframe sandbox
+
+## Distribution
+
+Built apps in `dist/` are committed to the repo for static hosting. Use raw GitHub links (e.g., `https://raw.githubusercontent.com/user/repo/main/dist/appname.js`) to reference them in your Warps for the UI.
+
+## ChatGPT Apps
+
+- [Apps SDK Quickstart](https://developers.openai.com/apps-sdk/quickstart) - Get started building ChatGPT apps
+- [ChatGPT Apps Documentation](https://developers.openai.com/apps-sdk) - Full docs and guides
+- [Model Context Protocol Docs](https://modelcontextprotocol.io/docs/sdk) - MCP SDK and protocol reference
