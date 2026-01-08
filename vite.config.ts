@@ -21,10 +21,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'scripts.js',
+        entryFileNames: 'widget.js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.name?.endsWith('.css')) {
-            return 'styles.css'
+            return 'widget.css'
           }
           return assetInfo.name || 'assets/[name].[ext]'
         },

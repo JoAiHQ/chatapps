@@ -1,7 +1,10 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { Alert } from '@openai/apps-sdk-ui/components/Alert'
 import { Button } from '@openai/apps-sdk-ui/components/Button'
+import { Textarea } from '@openai/apps-sdk-ui/components/Textarea'
 
-export function App() {
+function App() {
   console.log('JoAi ChatGPT App: ', (window as any)?.openai)
 
   return (
@@ -16,6 +19,18 @@ export function App() {
         title="Hello World"
         description="This app is in progress."
       />
+      <span>nice!</span>
+      <p>some example text</p>
+      <Textarea autoResize placeholder="Enter text..." rows={3} />
     </div>
+  )
+}
+
+const rootElement = document.getElementById('root')
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
   )
 }
