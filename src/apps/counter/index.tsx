@@ -1,9 +1,11 @@
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
+import { useToolOutput } from '../../lib/hooks'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const toolData = useToolOutput<{ initialCount?: number }>()
+  const [count, setCount] = useState(toolData?.initialCount ?? 0)
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-lg mx-auto">
