@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "node build.js",
-    "serve": "node server.js"
+    "dev": "node server.js"
   },
   "dependencies": {
     "@openai/apps-sdk-ui": "^0.2.1",

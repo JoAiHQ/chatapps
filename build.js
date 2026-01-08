@@ -6,14 +6,16 @@ import postcss from 'postcss'
 import postcssImport from 'postcss-import'
 import tailwindcss from '@tailwindcss/postcss'
 import autoprefixer from 'autoprefixer'
+import chokidar from 'chokidar'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const appName = process.argv[2]
+const watchMode = process.argv.includes('--watch') || process.argv.includes('-w')
 
 if (!appName) {
-  console.error('Usage: npm run build <appname>')
+  console.error('Usage: npm run build <appname> [--watch]')
   process.exit(1)
 }
 
@@ -56,7 +58,7 @@ async function buildApp() {
       bundle: true,
       format: 'esm',
       outfile,
-      minify: true,
+      minify: false, // Disable minification to see full error messages
       jsx: 'automatic',
       loader: {
         '.tsx': 'tsx',
@@ -64,7 +66,7 @@ async function buildApp() {
         '.css': 'css',
       },
       define: {
-        'process.env.NODE_ENV': '"production"',
+        'process.env.NODE_ENV': '"development"', // Use development mode for better error messages
       },
       legalComments: 'none',
     })
@@ -86,8 +88,54 @@ async function buildApp() {
     console.log(`✓ Built ${appName} → dist/${appName}.js`)
   } catch (error) {
     console.error(`✗ Build failed for ${appName}:`, error)
-    process.exit(1)
+    if (!watchMode) {
+      process.exit(1)
+    }
   }
 }
 
-buildApp()
+async function watchApp() {
+  console.log(`\n👀 Watching for changes in ${appName}...`)
+  console.log('   Press Ctrl+C to stop\n')
+
+  // Watch app files
+  const appDir = join(__dirname, 'src/apps', appName)
+  const libDir = join(__dirname, 'src/lib')
+
+  const watcher = chokidar.watch([
+    join(appDir, '**/*.{tsx,ts,jsx,js,css}'),
+    join(libDir, '**/*.{tsx,ts,jsx,js}'),
+  ], {
+    ignored: /node_modules/,
+    persistent: true,
+  })
+
+  let buildTimeout = null
+
+  watcher.on('change', (path) => {
+    console.log(`\n📝 File changed: ${path}`)
+
+    // Debounce rebuilds
+    if (buildTimeout) {
+      clearTimeout(buildTimeout)
+    }
+
+    buildTimeout = setTimeout(async () => {
+      console.log(`🔄 Rebuilding ${appName}...`)
+      await buildApp()
+    }, 100)
+  })
+
+  watcher.on('ready', () => {
+    console.log('✓ Watch mode active')
+  })
+
+  // Initial build
+  await buildApp()
+}
+
+if (watchMode) {
+  watchApp()
+} else {
+  buildApp()
+}

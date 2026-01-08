@@ -32,15 +32,49 @@ Access at: `http://localhost:3000/<appname>`
 
 - `hello` - Hello world with OpenAI Apps SDK components
 - `counter` - Simple counter with state management
+- `example` - Demonstrates using `useToolOutput` hook
 
 ## Creating a New App
 
 1. Create directory: `src/apps/myapp/`
 2. Add `index.tsx` with React component that mounts to `root` element
-3. Add `styles.css` with `@import 'tailwindcss';`
+3. Add `styles.css`:
+   ```css
+   @import 'tailwindcss';
+   @import '../../../node_modules/@openai/apps-sdk-ui/dist/es/styles/index.css';
+   @source '../../../node_modules/@openai/apps-sdk-ui';
+   ```
 4. Build: `node build.js myapp`
 5. Serve: `node server.js`
 6. Access: `http://localhost:3000/myapp`
+
+## Using the Tool Output Hook
+
+Access data from ChatGPT using the `useToolOutput` hook:
+
+```tsx
+import { useToolOutput } from '../../lib/hooks'
+
+interface MyData {
+  message: string
+  items: string[]
+}
+
+function App() {
+  const data = useToolOutput<MyData>()
+
+  return (
+    <div>
+      <p>{data?.message}</p>
+      <ul>
+        {data?.items?.map(item => <li key={item}>{item}</li>)}
+      </ul>
+    </div>
+  )
+}
+```
+
+The hook automatically reads from `window.openai.toolOutput` which is injected by ChatGPT when your app runs in the iframe.
 
 ## Bundle Specifications
 
