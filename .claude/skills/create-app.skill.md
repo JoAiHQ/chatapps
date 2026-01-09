@@ -2,18 +2,13 @@
 
 You are an expert at building ChatGPT applications using the OpenAI Apps SDK. Your goal is to create fully functional apps in one shot that work with ChatGPT.
 
-## Important: Check Latest Documentation First
+## Important: Check Latest SDK UI Components
 
-Before building any app, **you MUST check the latest documentation and updates** from these official sources:
+Before building any app, **you MUST fetch the latest SDK UI component documentation** from this Storybook:
 
-1. **Primary Documentation**: https://developers.openai.com/llms.txt
-2. **Apps SDK Quickstart**: https://developers.openai.com/apps-sdk/quickstart
-3. **Apps SDK Main Docs**: https://developers.openai.com/apps-sdk
-4. **Example Apps Repository**: https://github.com/openai/openai-apps-sdk-examples
-5. **ChatKit Starter App**: https://github.com/openai/openai-chatkit-starter-app
-6. **Model Context Protocol**: https://modelcontextprotocol.io/docs/sdk
+**https://openai.github.io/apps-sdk-ui/?path=/docs/overview-introduction--docs**
 
-Always fetch the latest information from these URLs before starting to ensure you're using current patterns and APIs.
+Always fetch this URL first to get the current list of available components, their props, variants, and usage examples. The component library may have been updated since your training data.
 
 ## Project Structure
 
@@ -23,6 +18,8 @@ This repository builds ChatGPT app UIs with the following structure:
 src/apps/<appname>/
   index.tsx       # App entry point with React component
   styles.css      # App styles (Tailwind + OpenAI SDK UI)
+  types.ts        # TypeScript types for the app
+  helpers.ts      # Helper/utility functions
 ```
 
 ## Build System
@@ -34,22 +31,39 @@ src/apps/<appname>/
 
 ## Required App Structure
 
-### 1. index.tsx Template
+### 1. types.ts Template
+
+```ts
+// Always use `type` instead of `interface` for type definitions
+export type ToolData = {
+  // Define your data structure that ChatGPT will send
+  message?: string
+  items?: string[]
+}
+```
+
+### 2. helpers.ts Template
+
+```ts
+// Helper/utility functions for the app
+export function formatValue(value: string): string {
+  return value.trim()
+}
+```
+
+### 3. index.tsx Template
 
 ```tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../lib/hooks'
+import { ToolData } from './types'
+// Import helpers as needed:
+// import { formatValue } from './helpers'
 // Import OpenAI SDK UI components as needed:
 // import { Button } from '@openai/apps-sdk-ui/components/Button'
 // import { Alert } from '@openai/apps-sdk-ui/components/Alert'
 // import { Textarea } from '@openai/apps-sdk-ui/components/Textarea'
-
-interface ToolData {
-  // Define your data structure that ChatGPT will send
-  message?: string
-  items?: string[]
-}
 
 function App() {
   // Access data from ChatGPT tool calls
@@ -73,7 +87,7 @@ if (rootElement) {
 }
 ```
 
-### 2. styles.css Template
+### 4. styles.css Template
 
 ```css
 @import 'tailwindcss';
@@ -146,17 +160,70 @@ window.openai = {
 
 ## OpenAI Apps SDK UI Components
 
-Use components from `@openai/apps-sdk-ui/components/`:
+**IMPORTANT**: Extensively use the ChatGPT SDK UI components. These components are designed to look native in ChatGPT and provide a consistent user experience. Always prefer SDK components over custom HTML elements.
 
-- **Button** - Primary, secondary, soft variants with colors
+Documentation: https://openai.github.io/apps-sdk-ui/?path=/docs/overview-introduction--docs
+
+### Available Components
+
+Import from `@openai/apps-sdk-ui/components/<ComponentName>`:
+
 - **Alert** - Info, warning, error alerts with actions
-- **Textarea** - Auto-resizing text input
-- **Input** - Text inputs with validation
-- **Select** - Dropdown selections
+- **AppsSDKUIProvider** - Provider for router configuration
+- **Avatar** - User/entity avatars
+- **Badge** - Status indicators and labels
+- **Button** - Primary, secondary, soft, outline variants with colors (primary, secondary, danger, warning, success, info)
 - **Checkbox** - Boolean inputs
-- **Card** - Container components
-- **Badge** - Status indicators
-- **Spinner** - Loading states
+- **CodeBlock** - Syntax-highlighted code display
+- **DatePicker** - Date selection
+- **DateRangePicker** - Date range selection
+- **EmptyMessage** - Empty state placeholder with title and description
+- **Icon** - Extensive icon library (see below)
+- **Image** - Optimized image display
+- **Indicator** - Status dots/indicators
+- **Input** - Text inputs with validation
+- **Markdown** - Markdown content renderer
+- **Menu** - Dropdown menus
+- **Popover** - Popup content
+- **RadioGroup** - Radio button groups
+- **SegmentedControl** - Tab-like segmented controls
+- **Select** - Dropdown selections
+- **SelectControl** - Advanced select controls
+- **ShimmerText** - Loading text placeholders
+- **Slider** - Range sliders
+- **Switch** - Toggle switches
+- **TagInput** - Tag/chip inputs
+- **TextLink** - Styled links
+- **Textarea** - Auto-resizing text input
+- **Tooltip** - Hover tooltips
+- **Transition** - Animation wrappers
+
+### Icons
+
+Import icons from `@openai/apps-sdk-ui/components/Icon`:
+
+```tsx
+import { Clock, Sparkles, DollarCircle, ChevronDown, ChevronRight } from '@openai/apps-sdk-ui/components/Icon'
+```
+
+Common icons: Calendar, Clock, Check, ChevronDown, ChevronRight, ChevronUp, ChevronLeft, DollarCircle, Download, Edit, ExternalLink, Eye, Heart, Info, Link, Lock, Mail, Maps, Members, Phone, Plus, Search, Settings, Sparkles, Star, Trash, Warning, and many more.
+
+### Design Tokens & Tailwind Classes
+
+Use SDK design tokens for consistent styling:
+
+- **Colors**: `text-primary`, `text-secondary`, `text-success`, `text-warning`, `text-danger`, `text-link`
+- **Backgrounds**: `bg-surface`, `bg-surface-secondary`
+- **Borders**: `border-default`, `border-subtle`
+- **Typography**: `heading-lg`, `heading-md`, `heading-sm`
+
+Example card pattern:
+```tsx
+<div className="rounded-2xl border border-default bg-surface shadow-lg p-4">
+  <h2 className="heading-lg">Title</h2>
+  <p className="text-secondary text-sm">Description</p>
+</div>
+```
 
 See existing apps in `src/apps/` for usage examples.
 
@@ -239,14 +306,17 @@ Study these existing examples:
 
 ## Best Practices
 
-1. **Keep bundles small**: Only import components you use
-2. **Type safety**: Define clear interfaces for tool data
-3. **Responsive design**: Use Tailwind classes for mobile/desktop
-4. **Error handling**: Check if data exists before rendering
-5. **Accessibility**: Use semantic HTML and ARIA labels
-6. **Performance**: Avoid unnecessary re-renders
-7. **State management**: Use useWidgetState for cross-turn persistence
-8. **Display modes**: Respect theme and displayMode from context
+1. **Use SDK UI components extensively**: Always prefer components from `@openai/apps-sdk-ui` over custom HTML elements. See docs: https://openai.github.io/apps-sdk-ui/?path=/docs/overview-introduction--docs
+2. **Design for dark mode and light mode**: Use SDK design tokens (`text-primary`, `text-secondary`, `bg-surface`, etc.) which automatically adapt to the theme. Never hardcode colors like `text-gray-500` or `bg-white`.
+3. **Never use empty lines in JSX**: Keep JSX compact without blank lines between elements.
+4. **Keep bundles small**: Only import components you use
+5. **Type safety**: Define clear types for tool data (always use `type` instead of `interface`)
+6. **File organization**: Put types in `types.ts` and helper functions in `helpers.ts`
+7. **Responsive design**: Use Tailwind classes for mobile/desktop
+8. **Error handling**: Check if data exists before rendering
+9. **Accessibility**: Use semantic HTML and ARIA labels
+10. **Performance**: Avoid unnecessary re-renders
+11. **State management**: Use useWidgetState for cross-turn persistence
 
 ## Common Patterns
 
