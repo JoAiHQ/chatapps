@@ -16,7 +16,7 @@ src/apps/<appname>/
 node build.js <appname>
 ```
 
-Outputs: `dist/<appname>.js` - Minified ESM bundle with inlined CSS
+Outputs: `dist/<appname>.html` - Single standalone HTML file ready for ChatGPT Apps
 
 ## Serve Apps
 
@@ -24,7 +24,7 @@ Outputs: `dist/<appname>.js` - Minified ESM bundle with inlined CSS
 node server.js
 ```
 
-Server wraps the bundle in minimal HTML: `<div id="root"></div><script type="module">{bundle}</script>`
+Server serves the HTML file directly with optional live reload in dev mode.
 
 Access at: `http://localhost:3000/<appname>`
 
@@ -78,17 +78,23 @@ The hook automatically reads from `window.openai.toolOutput` which is injected b
 
 ## Bundle Specifications
 
-- Format: ESM JavaScript module
-- Minified with no comments (legalComments: 'none')
-- CSS inlined via style injection at runtime
+- Built with Vite for optimal performance
+- Format: Single standalone HTML file
+- Structure follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe):
+  ```html
+  <div id="root"></div>
+  <style>{CSS}</style>
+  <script type="module">{JS}</script>
+  ```
 - OpenAI Apps SDK UI styles included
 - Tailwind CSS purged to only used classes
-- ~320KB per app (minified, includes React, ReactDOM, OpenAI SDK UI, Tailwind)
+- ~700-850KB per app (includes React, ReactDOM, OpenAI SDK UI, Tailwind)
 - Compatible with ChatGPT iframe sandbox
+- Ready to upload to GitHub and use directly
 
 ## Distribution
 
-Built apps in `dist/` are committed to the repo for static hosting. Use raw GitHub links (e.g., `https://raw.githubusercontent.com/user/repo/main/dist/appname.js`) to reference them in your Warps for the UI.
+Built apps in `dist/` are committed to the repo for static hosting. Use raw GitHub URLs to reference them in your MCP server.
 
 ## ChatGPT Apps
 

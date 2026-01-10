@@ -17,7 +17,7 @@ const fileMtimes = new Map()
 
 app.get('/:appname', (req, res) => {
   const appName = req.params.appname
-  const filePath = join(distDir, `${appName}.js`)
+  const filePath = join(distDir, `${appName}.html`)
 
   if (!existsSync(filePath)) {
     return res.status(404).send(`App "${appName}" not found. Build it first with: node build.js ${appName}`)
@@ -26,10 +26,11 @@ app.get('/:appname', (req, res) => {
   const stats = statSync(filePath)
   fileMtimes.set(appName, stats.mtimeMs)
 
-  const jsBundle = readFileSync(filePath, 'utf-8')
+  let html = readFileSync(filePath, 'utf-8')
 
   // Add live reload script in dev mode
-  const liveReloadScript = devMode ? `
+  if (devMode) {
+    const liveReloadScript = `
     <script>
       (function() {
         let lastCheck = ${stats.mtimeMs};
@@ -46,14 +47,10 @@ app.get('/:appname', (req, res) => {
           }
         }, 500);
       })();
-    </script>
-  ` : ''
+    </script>`
 
-  const html = `
-    <div id="root"></div>
-    <script type="module">${jsBundle}</script>
-    ${liveReloadScript}
-  `
+    html = html + '\n' + liveReloadScript
+  }
 
   res.setHeader('Content-Type', 'text/html')
   res.removeHeader('X-Frame-Options')
@@ -63,7 +60,7 @@ app.get('/:appname', (req, res) => {
 // Live reload check endpoint
 app.get('/:appname/check', (req, res) => {
   const appName = req.params.appname
-  const filePath = join(distDir, `${appName}.js`)
+  const filePath = join(distDir, `${appName}.html`)
 
   if (!existsSync(filePath)) {
     return res.status(404).json({ error: 'File not found' })

@@ -1,11 +1,9 @@
-import { build } from 'esbuild'
-import { readFileSync, writeFileSync, mkdirSync, unlinkSync } from 'fs'
-import { join, dirname } from 'path'
+import { build } from 'vite'
+import react from '@vitejs/plugin-react'
+import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs'
+import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
-import postcss from 'postcss'
-import postcssImport from 'postcss-import'
-import tailwindcss from '@tailwindcss/postcss'
-import autoprefixer from 'autoprefixer'
+import tailwindcss from '@tailwindcss/vite'
 import chokidar from 'chokidar'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -15,81 +13,95 @@ const appName = process.argv[2]
 const watchMode = process.argv.includes('--watch') || process.argv.includes('-w')
 
 if (!appName) {
-  console.error('Usage: npm run build <appname> [--watch]')
+  console.error('Usage: node build.js <appname> [--watch]')
   process.exit(1)
 }
 
-const appDir = join(__dirname, 'src/apps', appName)
-const entryPoint = join(appDir, 'index.tsx')
-const cssPath = join(appDir, 'styles.css')
-const distDir = join(__dirname, 'dist')
-const outfile = join(distDir, `${appName}.js`)
+const appDir = resolve(__dirname, 'src/apps', appName)
+const entryPoint = resolve(appDir, 'index.tsx')
+const stylesCssPath = resolve(appDir, 'styles.css')
+const distDir = resolve(__dirname, 'dist')
+const outfile = `${appName}.js`
 
-async function processCSS() {
-  const cssContent = readFileSync(cssPath, 'utf-8')
+// Create a virtual entry plugin that includes CSS
+function wrapEntryPlugin(virtualId, entryFile, cssFile) {
+  return {
+    name: `virtual-entry-wrapper:${entryFile}`,
+    resolveId(id) {
+      if (id === virtualId) return id
+    },
+    load(id) {
+      if (id !== virtualId) return null
 
-  const result = await postcss([
-    postcssImport({
-      path: [__dirname, join(__dirname, 'node_modules')]
-    }),
-    tailwindcss({
-      content: [
-        join(appDir, '**/*.{tsx,jsx,ts,js}'),
-        join(__dirname, 'node_modules/@openai/apps-sdk-ui/**/*.{js,jsx,ts,tsx}')
-      ],
-    }),
-    autoprefixer,
-  ]).process(cssContent, { from: cssPath })
-
-  return result.css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n/g, '\n').trim()
+      return `
+import ${JSON.stringify(cssFile)};
+export * from ${JSON.stringify(entryFile)};
+import ${JSON.stringify(entryFile)};
+      `.trim()
+    },
+  }
 }
 
 async function buildApp() {
   try {
-    mkdirSync(distDir, { recursive: true })
-
     console.log(`Building ${appName}...`)
 
-    const appCss = await processCSS()
-    const cssOutfile = outfile.replace(/\.js$/, '.css')
+    const virtualId = `\0virtual-entry:${entryPoint}`
 
     await build({
-      entryPoints: [entryPoint],
-      bundle: true,
-      format: 'esm',
-      outfile,
-      minify: false,
-      jsx: 'automatic',
-      loader: {
-        '.tsx': 'tsx',
-        '.ts': 'ts',
-        '.css': 'css',
+      configFile: false,
+      root: appDir,
+      plugins: [
+        wrapEntryPlugin(virtualId, entryPoint, stylesCssPath),
+        tailwindcss(),
+        react(),
+      ],
+      build: {
+        outDir: distDir,
+        emptyOutDir: false,
+        minify: false,
+        cssCodeSplit: false,
+        rollupOptions: {
+          input: virtualId,
+          output: {
+            format: 'es',
+            entryFileNames: outfile,
+            inlineDynamicImports: true,
+            assetFileNames: (info) => {
+              if ((info.name || '').endsWith('.css')) {
+                return outfile.replace(/\.js$/, '.css')
+              }
+              return `[name]-[hash][extname]`
+            },
+          },
+        },
       },
-      define: {
-        'process.env.NODE_ENV': '"production"',
-      },
-      legalComments: 'none',
     })
 
-    let componentCss = ''
-    try {
-      componentCss = readFileSync(cssOutfile, 'utf-8')
-      unlinkSync(cssOutfile)
-    } catch (e) {
-      // No CSS file generated
+    // Read the generated JS and CSS files
+    const jsPath = join(distDir, outfile)
+    const cssPath = join(distDir, outfile.replace(/\.js$/, '.css'))
+    const htmlPath = join(distDir, outfile.replace(/\.js$/, '.html'))
+
+    const jsContent = readFileSync(jsPath, 'utf-8')
+    let cssContent = ''
+
+    if (existsSync(cssPath)) {
+      cssContent = readFileSync(cssPath, 'utf-8')
+      unlinkSync(cssPath)
     }
 
-    const allCss = appCss + '\n' + componentCss
-    const finalCss = allCss.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n/g, '\n').trim()
-    const jsContent = readFileSync(outfile, 'utf-8')
+    // Delete the JS file since we're creating HTML
+    unlinkSync(jsPath)
 
-    // Bundle format: CSS marker + CSS + JS marker + JS
-    // This allows the MCP server to split them easily
-    const bundle = `/* __CHATGPT_APP_CSS_START__ */\n${finalCss}\n/* __CHATGPT_APP_CSS_END__ */\n/* __CHATGPT_APP_JS_START__ */\n${jsContent}\n/* __CHATGPT_APP_JS_END__ */`
+    // Create standalone HTML file
+    const html = `<div id="root"></div>
+<style>${cssContent}</style>
+<script type="module">${jsContent}</script>`
 
-    writeFileSync(outfile, bundle)
+    writeFileSync(htmlPath, html.trim())
 
-    console.log(`✓ Built ${appName} → dist/${appName}.js`)
+    console.log(`✓ Built ${appName} → dist/${appName}.html`)
   } catch (error) {
     console.error(`✗ Build failed for ${appName}:`, error)
     if (!watchMode) {
