@@ -22,6 +22,7 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
   const unbondable = formatEgld(delegation.userUnBondable)
   const hasUndelegated = delegation.userUndelegatedList.length > 0
   const hasUnbondable = BigInt(delegation.userUnBondable) > 0
+  const hasRewards = BigInt(delegation.claimableRewards) > 0
 
   return (
     <div className="rounded-2xl border border-default bg-surface p-4">
@@ -60,6 +61,23 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
           </dd>
         </div>
       </dl>
+      {hasRewards && (
+        <Button
+          color="success"
+          size="small"
+          block
+          className="mb-3"
+          onClick={() =>
+            window.openai?.callTool({
+              name: 'staking_claim_rewards',
+              arguments: JSON.stringify({ id: delegation.contract }),
+            })
+          }
+        >
+          <Sparkles />
+          Claim Rewards
+        </Button>
+      )}
       {(hasUndelegated || hasUnbondable) && (
         <div className="border-t border-subtle pt-3 mt-3">
           <button
