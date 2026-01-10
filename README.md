@@ -82,9 +82,11 @@ The hook automatically reads from `window.openai.toolOutput` which is injected b
 - Format: Single standalone HTML file with full document structure
 - Structure follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe)
 - **Dark mode support**: Automatically adapts to ChatGPT's theme via `window.openai.theme`
+- **Minified**: JavaScript and CSS minified with esbuild for optimal size
 - OpenAI Apps SDK UI styles included with `light-dark()` CSS functions
 - Tailwind CSS purged to only used classes
-- ~700-850KB per app (includes React, ReactDOM, OpenAI SDK UI, Tailwind)
+- **~300-370KB per app** (includes React, ReactDOM, OpenAI SDK UI, Tailwind)
+  - Gzipped: ~80-100KB for faster downloads
 - Compatible with ChatGPT iframe sandbox
 - Ready to upload to GitHub and use directly
 

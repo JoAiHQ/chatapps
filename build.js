@@ -59,7 +59,8 @@ async function buildApp() {
       build: {
         outDir: distDir,
         emptyOutDir: false,
-        minify: false,
+        minify: 'esbuild',
+        cssMinify: 'esbuild',
         cssCodeSplit: false,
         rollupOptions: {
           input: virtualId,
