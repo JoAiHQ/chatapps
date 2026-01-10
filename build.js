@@ -58,7 +58,7 @@ async function buildApp() {
       bundle: true,
       format: 'esm',
       outfile,
-      minify: false, // Disable minification to see full error messages
+      minify: false,
       jsx: 'automatic',
       loader: {
         '.tsx': 'tsx',
@@ -66,7 +66,7 @@ async function buildApp() {
         '.css': 'css',
       },
       define: {
-        'process.env.NODE_ENV': '"development"', // Use development mode for better error messages
+        'process.env.NODE_ENV': '"production"',
       },
       legalComments: 'none',
     })
@@ -80,10 +80,14 @@ async function buildApp() {
     }
 
     const allCss = appCss + '\n' + componentCss
+    const finalCss = allCss.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n/g, '\n').trim()
     const jsContent = readFileSync(outfile, 'utf-8')
-    const finalJs = `const style=document.createElement('style');style.textContent=${JSON.stringify(allCss.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*\n/g, '\n').trim())};document.head.appendChild(style);${jsContent}`
 
-    writeFileSync(outfile, finalJs)
+    // Bundle format: CSS marker + CSS + JS marker + JS
+    // This allows the MCP server to split them easily
+    const bundle = `/* __CHATGPT_APP_CSS_START__ */\n${finalCss}\n/* __CHATGPT_APP_CSS_END__ */\n/* __CHATGPT_APP_JS_START__ */\n${jsContent}\n/* __CHATGPT_APP_JS_END__ */`
+
+    writeFileSync(outfile, bundle)
 
     console.log(`✓ Built ${appName} → dist/${appName}.js`)
   } catch (error) {

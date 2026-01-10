@@ -1,24 +1,28 @@
 import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
+import {
+  AvatarProfile,
+  DollarCircle,
+  Number,
+} from '@openai/apps-sdk-ui/components/Icon'
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
-import { DollarCircle, AvatarProfile, Number } from '@openai/apps-sdk-ui/components/Icon'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../lib/hooks'
-import { ToolData } from './types'
 import { shortenAddress } from './helpers'
+import { ToolData } from './types'
 
 function App() {
   const toolData = useToolOutput<ToolData>()
 
   if (!toolData || !toolData.ACCOUNT_DATA) {
     return (
-      <div className="p-8">
-        <EmptyMessage
-          title="No account data"
-          description="Account information is not available."
-        />
-      </div>
+      <EmptyMessage>
+        <EmptyMessage.Title>No account data</EmptyMessage.Title>
+        <EmptyMessage.Description>
+          Account information is not available.
+        </EmptyMessage.Description>
+      </EmptyMessage>
     )
   }
 
@@ -34,7 +38,9 @@ function App() {
           </p>
         </Tooltip>
         {USERNAME && (
-          <Badge color="info" className="mt-2">@{USERNAME}</Badge>
+          <Badge color="info" className="mt-2">
+            @{USERNAME}
+          </Badge>
         )}
       </div>
       <div className="rounded-2xl border border-default bg-surface p-4">
@@ -44,7 +50,10 @@ function App() {
               <DollarCircle className="size-5" />
               Balance
             </dt>
-            <dd className="text-xl font-bold text-primary">{BALANCE_FORMATTED} <span className="text-sm text-secondary">EGLD</span></dd>
+            <dd className="text-xl font-bold text-primary">
+              {BALANCE_FORMATTED}{' '}
+              <span className="text-sm text-secondary">EGLD</span>
+            </dd>
           </div>
           <div className="flex items-center justify-between border-t border-subtle pt-4">
             <dt className="flex items-center gap-2 text-secondary">
