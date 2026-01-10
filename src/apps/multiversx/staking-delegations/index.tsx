@@ -70,7 +70,7 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
           className="mb-3"
           onClick={() =>
             window.openai?.callTool(Config.Tools.StakingClaim, {
-              provider: delegation.contract,
+              PROVIDER: delegation.contract,
             })
           }
         >
