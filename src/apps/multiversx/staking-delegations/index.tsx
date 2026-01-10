@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../../lib/hooks'
 import { formatEgld, shortenAddress } from '../helpers'
 import { Delegation, DelegationData } from '../types'
+import { Config } from './config'
 
 function DelegationCard({ delegation }: { delegation: Delegation }) {
   const [expanded, setExpanded] = useState(false)
@@ -68,8 +69,8 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
           block
           className="mb-3"
           onClick={() =>
-            window.openai?.callTool('staking_claim_rewards', {
-              id: delegation.contract,
+            window.openai?.callTool(Config.Tools.StakingClaim, {
+              provider: delegation.contract,
             })
           }
         >
