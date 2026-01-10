@@ -143,7 +143,7 @@ function App() {
   return (
     <div className="flex flex-col gap-4 p-4 max-w-lg mx-auto">
       <div className="text-center mb-2">
-        <h1 className="heading-lg">MultiversX Delegations</h1>
+        <h1 className="heading-lg">Your staked eGold</h1>
         <p className="text-secondary text-sm mt-1">
           {PROVIDER_COUNT} provider{PROVIDER_COUNT !== 1 ? 's' : ''}
         </p>
