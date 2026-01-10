@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs'
 import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { execSync } from 'child_process'
 import tailwindcss from '@tailwindcss/vite'
 import chokidar from 'chokidar'
 
@@ -11,9 +12,13 @@ const __dirname = dirname(__filename)
 
 const appName = process.argv[2]
 const watchMode = process.argv.includes('--watch') || process.argv.includes('-w')
+const typecheck = !process.argv.includes('--no-typecheck')
 
 if (!appName) {
-  console.error('Usage: node build.js <appname> [--watch]')
+  console.error('Usage: node build.js <brand/appname> [--watch] [--no-typecheck]')
+  console.error('Examples:')
+  console.error('  node build.js counter')
+  console.error('  node build.js multiversx/account')
   process.exit(1)
 }
 
@@ -21,7 +26,7 @@ const appDir = resolve(__dirname, 'src/apps', appName)
 const entryPoint = resolve(appDir, 'index.tsx')
 const stylesCssPath = resolve(appDir, 'styles.css')
 const distDir = resolve(__dirname, 'dist')
-const outfile = `${appName}.js`
+const outfile = `${appName.replace(/\//g, '-')}.js`
 
 // Create a virtual entry plugin that includes CSS
 function wrapEntryPlugin(virtualId, entryFile, cssFile) {
@@ -42,9 +47,33 @@ import ${JSON.stringify(entryFile)};
   }
 }
 
+async function typeCheck() {
+  if (!typecheck) {
+    return
+  }
+
+  try {
+    console.log('🔍 Running TypeScript check...')
+    execSync('./node_modules/.bin/tsc --noEmit', {
+      cwd: __dirname,
+      stdio: 'inherit',
+    })
+    console.log('✓ TypeScript check passed')
+  } catch (error) {
+    console.error('✗ TypeScript check failed')
+    if (!watchMode) {
+      process.exit(1)
+    }
+    throw error
+  }
+}
+
 async function buildApp() {
   try {
     console.log(`Building ${appName}...`)
+
+    // Run TypeScript check before building
+    await typeCheck()
 
     const virtualId = `\0virtual-entry:${entryPoint}`
 
@@ -133,14 +162,23 @@ async function watchApp() {
   console.log(`\n👀 Watching for changes in ${appName}...`)
   console.log('   Press Ctrl+C to stop\n')
 
-  // Watch app files
+  // Watch app files and brand folder for shared code
   const appDir = join(__dirname, 'src/apps', appName)
   const libDir = join(__dirname, 'src/lib')
 
-  const watcher = chokidar.watch([
+  const watchPaths = [
     join(appDir, '**/*.{tsx,ts,jsx,js,css}'),
     join(libDir, '**/*.{tsx,ts,jsx,js}'),
-  ], {
+  ]
+
+  // If app is in a brand folder (e.g., multiversx/account), also watch the brand folder
+  if (appName.includes('/')) {
+    const brandFolder = appName.split('/')[0]
+    const brandDir = join(__dirname, 'src/apps', brandFolder)
+    watchPaths.push(join(brandDir, '*.{ts,tsx}')) // Watch shared helpers.ts, types.ts, etc.
+  }
+
+  const watcher = chokidar.watch(watchPaths, {
     ignored: /node_modules/,
     persistent: true,
   })

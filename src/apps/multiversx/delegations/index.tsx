@@ -11,9 +11,9 @@ import {
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../lib/hooks'
-import { formatEgld, shortenAddress } from './helpers'
-import { Delegation, DelegationData } from './types'
+import { useToolOutput } from '../../../lib/hooks'
+import { formatEgld, shortenAddress } from '../helpers'
+import { Delegation, DelegationData } from '../types'
 
 function DelegationCard({ delegation }: { delegation: Delegation }) {
   const [expanded, setExpanded] = useState(false)
@@ -64,13 +64,12 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
       {hasRewards && (
         <Button
           color="success"
-          size="small"
+          size="sm"
           block
           className="mb-3"
           onClick={() =>
-            window.openai?.callTool({
-              name: 'staking_claim_rewards',
-              arguments: JSON.stringify({ id: delegation.contract }),
+            window.openai?.callTool('staking_claim_rewards', {
+              id: delegation.contract,
             })
           }
         >

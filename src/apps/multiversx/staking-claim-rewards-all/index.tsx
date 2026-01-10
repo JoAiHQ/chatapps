@@ -9,9 +9,9 @@ import {
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../lib/hooks'
-import { shortenAddress, shortenHash } from './helpers'
-import { ClaimAllRewardsData, ProviderClaim } from './types'
+import { useToolOutput } from '../../../lib/hooks'
+import { shortenAddress, shortenHash } from '../helpers'
+import { ClaimAllRewardsData, ProviderClaim } from '../types'
 
 function ClaimCard({ claim }: { claim: ProviderClaim }) {
   const explorerUrl = `https://explorer.multiversx.com/transactions/${claim.txHash}`
