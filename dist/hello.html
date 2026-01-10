@@ -1,4 +1,9 @@
-<div id="root"></div>
+<!DOCTYPE html>
+<html data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <style>/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
@@ -4979,7 +4984,15 @@
 }
 }
 </style>
-<script type="module">var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+// Support theme switching via window.openai.theme
+if (window.openai?.theme) {
+  document.documentElement.setAttribute('data-theme', window.openai.theme);
+}
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 function getDefaultExportFromCjs(x) {
   return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
 }
@@ -18240,4 +18253,7 @@ if (rootElement) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
   );
 }
+
 </script>
+</body>
+</html>

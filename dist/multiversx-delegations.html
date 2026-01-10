@@ -1,4 +1,9 @@
-<div id="root"></div>
+<!DOCTYPE html>
+<html data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <style>/*! tailwindcss v4.1.18 | MIT License | https://tailwindcss.com */
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
@@ -3390,10 +3395,6 @@
     padding: calc(var(--spacing) * 4);
   }
 
-  .p-8 {
-    padding: calc(var(--spacing) * 8);
-  }
-
   .pt-3 {
     padding-top: calc(var(--spacing) * 3);
   }
@@ -3765,6 +3766,187 @@
 @property --tw-drop-shadow-size {
   syntax: "*";
   inherits: false
+}
+@layer components {._Badge_1viyg_1 {
+  --indicator-size: var(--badge-indicator-size);
+
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1);
+  height: var(--badge-size);
+  padding: 0 var(--badge-gutter);
+  border-radius: var(--badge-radius);
+  font-size: var(--badge-font-size);
+  font-weight: var(--badge-font-weight);
+  letter-spacing: var(--badge-tracking);
+  white-space: nowrap;
+}
+
+  ._Badge_1viyg_1 svg {
+    font-size: var(--badge-icon-font-size);
+  }
+
+    :where(._Badge_1viyg_1 svg:first-child:not(:only-child)) {
+      margin-left: var(--badge-icon-offset, -1px);
+    }
+
+    :where(._Badge_1viyg_1 svg:last-child:not(:only-child)) {
+      margin-right: var(--badge-icon-offset, -1px);
+    }
+
+  /* =============================================
+    Variants
+  ============================================= */
+  ._Badge_1viyg_1[data-variant="soft"] {
+    background-color: var(--badge-background-color);
+    color: var(--badge-text-color);
+  }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="secondary"]) {
+      --badge-background-color: var(--color-background-secondary-soft-alpha);
+      --badge-text-color: var(--color-text-secondary-soft);
+    }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="success"]) {
+      --badge-background-color: var(--color-background-success-soft-alpha);
+      --badge-text-color: var(--color-text-success-soft);
+    }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="warning"]) {
+      --badge-background-color: var(--color-background-warning-soft-alpha);
+      --badge-text-color: var(--color-text-warning-soft);
+    }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="danger"]) {
+      --badge-background-color: var(--color-background-danger-soft-alpha);
+      --badge-text-color: var(--color-text-danger-soft);
+    }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="info"]) {
+      --badge-background-color: var(--color-background-info-soft-alpha);
+      --badge-text-color: var(--color-text-info-soft);
+    }
+
+    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="discovery"]) {
+      --badge-background-color: var(--color-background-discovery-soft-alpha);
+      --badge-text-color: var(--color-text-discovery-soft);
+    }
+
+  ._Badge_1viyg_1[data-variant="solid"] {
+    background-color: var(--badge-background-color);
+    color: var(--badge-text-color);
+  }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="secondary"]) {
+      --badge-background-color: var(--color-background-secondary-solid);
+      --badge-text-color: var(--color-text-secondary-solid);
+    }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="success"]) {
+      --badge-background-color: var(--color-background-success-solid);
+      --badge-text-color: var(--color-text-success-solid);
+    }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="warning"]) {
+      --badge-background-color: var(--color-background-warning-solid);
+      --badge-text-color: var(--color-text-warning-solid);
+    }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="danger"]) {
+      --badge-background-color: var(--color-background-danger-solid);
+      --badge-text-color: var(--color-text-danger-solid);
+    }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="info"]) {
+      --badge-background-color: var(--color-background-info-solid);
+      --badge-text-color: var(--color-text-info-solid);
+    }
+
+    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="discovery"]) {
+      --badge-background-color: var(--color-background-discovery-solid);
+      --badge-text-color: var(--color-text-discovery-solid);
+    }
+
+  ._Badge_1viyg_1[data-variant="outline"] {
+    /* Avoids additive `width` compared to other variants */
+    box-shadow: 0 0 0 1px var(--badge-border-color) inset;
+    color: var(--badge-text-color);
+  }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="secondary"]) {
+      --badge-border-color: var(--color-border-secondary-outline);
+      --badge-text-color: var(--color-text-secondary-outline);
+    }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="success"]) {
+      --badge-border-color: var(--color-border-success-outline);
+      --badge-text-color: var(--color-text-success-outline);
+    }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="warning"]) {
+      --badge-border-color: var(--color-border-warning-outline);
+      --badge-text-color: var(--color-text-warning-outline);
+    }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="danger"]) {
+      --badge-border-color: var(--color-border-danger-outline);
+      --badge-text-color: var(--color-text-danger-outline);
+    }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="info"]) {
+      --badge-border-color: var(--color-border-info-outline);
+      --badge-text-color: var(--color-text-info-outline);
+    }
+
+    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="discovery"]) {
+      --badge-border-color: var(--color-border-discovery-outline);
+      --badge-text-color: var(--color-text-discovery-outline);
+    }
+
+  /* =============================================
+    Sizes
+  ============================================= */
+  ._Badge_1viyg_1:where([data-size="sm"]) {
+    --badge-size: var(--badge-size-sm);
+    --badge-gutter: var(--badge-gutter-sm);
+    --badge-font-size: var(--badge-font-size-sm);
+    --badge-font-weight: var(--badge-font-weight-sm);
+    --badge-tracking: var(--badge-tracking-sm);
+    --badge-radius: var(--badge-radius-sm);
+    --badge-icon-font-size: var(--badge-icon-font-size-sm);
+    --badge-indicator-size: var(--badge-indicator-size-sm);
+  }
+
+  ._Badge_1viyg_1:where([data-size="md"]) {
+    --badge-size: var(--badge-size-md);
+    --badge-gutter: var(--badge-gutter-md);
+    --badge-font-size: var(--badge-font-size-md);
+    --badge-font-weight: var(--badge-font-weight-md);
+    --badge-tracking: var(--badge-tracking-md);
+    --badge-radius: var(--badge-radius-md);
+    --badge-icon-font-size: var(--badge-icon-font-size-md);
+    --badge-indicator-size: var(--badge-indicator-size-md);
+  }
+
+  ._Badge_1viyg_1:where([data-size="lg"]) {
+    --badge-size: var(--badge-size-lg);
+    --badge-gutter: var(--badge-gutter-lg);
+    --badge-font-size: var(--badge-font-size-lg);
+    --badge-font-weight: var(--badge-font-weight-lg);
+    --badge-tracking: var(--badge-tracking-lg);
+    --badge-radius: var(--badge-radius-lg);
+    --badge-icon-font-size: var(--badge-icon-font-size-lg);
+    --badge-indicator-size: var(--badge-indicator-size-lg);
+  }
+
+  /* =============================================
+    Pill
+  ============================================= */
+  ._Badge_1viyg_1:where([data-pill]) {
+    --badge-radius: var(--radius-full);
+
+    padding: 0 calc(var(--badge-gutter) * var(--control-gutter-pill-scaling));
+  }
 }
 @layer components {._LoadingIndicator_7yl6f_1 {
   position: relative;
@@ -4648,187 +4830,6 @@
   }
 } */
 }
-@layer components {._Badge_1viyg_1 {
-  --indicator-size: var(--badge-indicator-size);
-
-  display: inline-flex;
-  align-items: center;
-  gap: calc(var(--spacing) * 1);
-  height: var(--badge-size);
-  padding: 0 var(--badge-gutter);
-  border-radius: var(--badge-radius);
-  font-size: var(--badge-font-size);
-  font-weight: var(--badge-font-weight);
-  letter-spacing: var(--badge-tracking);
-  white-space: nowrap;
-}
-
-  ._Badge_1viyg_1 svg {
-    font-size: var(--badge-icon-font-size);
-  }
-
-    :where(._Badge_1viyg_1 svg:first-child:not(:only-child)) {
-      margin-left: var(--badge-icon-offset, -1px);
-    }
-
-    :where(._Badge_1viyg_1 svg:last-child:not(:only-child)) {
-      margin-right: var(--badge-icon-offset, -1px);
-    }
-
-  /* =============================================
-    Variants
-  ============================================= */
-  ._Badge_1viyg_1[data-variant="soft"] {
-    background-color: var(--badge-background-color);
-    color: var(--badge-text-color);
-  }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="secondary"]) {
-      --badge-background-color: var(--color-background-secondary-soft-alpha);
-      --badge-text-color: var(--color-text-secondary-soft);
-    }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="success"]) {
-      --badge-background-color: var(--color-background-success-soft-alpha);
-      --badge-text-color: var(--color-text-success-soft);
-    }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="warning"]) {
-      --badge-background-color: var(--color-background-warning-soft-alpha);
-      --badge-text-color: var(--color-text-warning-soft);
-    }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="danger"]) {
-      --badge-background-color: var(--color-background-danger-soft-alpha);
-      --badge-text-color: var(--color-text-danger-soft);
-    }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="info"]) {
-      --badge-background-color: var(--color-background-info-soft-alpha);
-      --badge-text-color: var(--color-text-info-soft);
-    }
-
-    ._Badge_1viyg_1[data-variant="soft"]:where([data-color="discovery"]) {
-      --badge-background-color: var(--color-background-discovery-soft-alpha);
-      --badge-text-color: var(--color-text-discovery-soft);
-    }
-
-  ._Badge_1viyg_1[data-variant="solid"] {
-    background-color: var(--badge-background-color);
-    color: var(--badge-text-color);
-  }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="secondary"]) {
-      --badge-background-color: var(--color-background-secondary-solid);
-      --badge-text-color: var(--color-text-secondary-solid);
-    }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="success"]) {
-      --badge-background-color: var(--color-background-success-solid);
-      --badge-text-color: var(--color-text-success-solid);
-    }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="warning"]) {
-      --badge-background-color: var(--color-background-warning-solid);
-      --badge-text-color: var(--color-text-warning-solid);
-    }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="danger"]) {
-      --badge-background-color: var(--color-background-danger-solid);
-      --badge-text-color: var(--color-text-danger-solid);
-    }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="info"]) {
-      --badge-background-color: var(--color-background-info-solid);
-      --badge-text-color: var(--color-text-info-solid);
-    }
-
-    ._Badge_1viyg_1[data-variant="solid"]:where([data-color="discovery"]) {
-      --badge-background-color: var(--color-background-discovery-solid);
-      --badge-text-color: var(--color-text-discovery-solid);
-    }
-
-  ._Badge_1viyg_1[data-variant="outline"] {
-    /* Avoids additive `width` compared to other variants */
-    box-shadow: 0 0 0 1px var(--badge-border-color) inset;
-    color: var(--badge-text-color);
-  }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="secondary"]) {
-      --badge-border-color: var(--color-border-secondary-outline);
-      --badge-text-color: var(--color-text-secondary-outline);
-    }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="success"]) {
-      --badge-border-color: var(--color-border-success-outline);
-      --badge-text-color: var(--color-text-success-outline);
-    }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="warning"]) {
-      --badge-border-color: var(--color-border-warning-outline);
-      --badge-text-color: var(--color-text-warning-outline);
-    }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="danger"]) {
-      --badge-border-color: var(--color-border-danger-outline);
-      --badge-text-color: var(--color-text-danger-outline);
-    }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="info"]) {
-      --badge-border-color: var(--color-border-info-outline);
-      --badge-text-color: var(--color-text-info-outline);
-    }
-
-    ._Badge_1viyg_1[data-variant="outline"]:where([data-color="discovery"]) {
-      --badge-border-color: var(--color-border-discovery-outline);
-      --badge-text-color: var(--color-text-discovery-outline);
-    }
-
-  /* =============================================
-    Sizes
-  ============================================= */
-  ._Badge_1viyg_1:where([data-size="sm"]) {
-    --badge-size: var(--badge-size-sm);
-    --badge-gutter: var(--badge-gutter-sm);
-    --badge-font-size: var(--badge-font-size-sm);
-    --badge-font-weight: var(--badge-font-weight-sm);
-    --badge-tracking: var(--badge-tracking-sm);
-    --badge-radius: var(--badge-radius-sm);
-    --badge-icon-font-size: var(--badge-icon-font-size-sm);
-    --badge-indicator-size: var(--badge-indicator-size-sm);
-  }
-
-  ._Badge_1viyg_1:where([data-size="md"]) {
-    --badge-size: var(--badge-size-md);
-    --badge-gutter: var(--badge-gutter-md);
-    --badge-font-size: var(--badge-font-size-md);
-    --badge-font-weight: var(--badge-font-weight-md);
-    --badge-tracking: var(--badge-tracking-md);
-    --badge-radius: var(--badge-radius-md);
-    --badge-icon-font-size: var(--badge-icon-font-size-md);
-    --badge-indicator-size: var(--badge-indicator-size-md);
-  }
-
-  ._Badge_1viyg_1:where([data-size="lg"]) {
-    --badge-size: var(--badge-size-lg);
-    --badge-gutter: var(--badge-gutter-lg);
-    --badge-font-size: var(--badge-font-size-lg);
-    --badge-font-weight: var(--badge-font-weight-lg);
-    --badge-tracking: var(--badge-tracking-lg);
-    --badge-radius: var(--badge-radius-lg);
-    --badge-icon-font-size: var(--badge-icon-font-size-lg);
-    --badge-indicator-size: var(--badge-indicator-size-lg);
-  }
-
-  /* =============================================
-    Pill
-  ============================================= */
-  ._Badge_1viyg_1:where([data-pill]) {
-    --badge-radius: var(--radius-full);
-
-    padding: 0 calc(var(--badge-gutter) * var(--control-gutter-pill-scaling));
-  }
-}
 @layer components {._EmptyMessage_1r5gu_1 {
   display: flex;
   flex-direction: column;
@@ -5000,7 +5001,15 @@
   }
 }
 </style>
-<script type="module">function _mergeNamespaces(n, m) {
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+// Support theme switching via window.openai.theme
+if (window.openai?.theme) {
+  document.documentElement.setAttribute('data-theme', window.openai.theme);
+}
+function _mergeNamespaces(n, m) {
   for (var i = 0; i < m.length; i++) {
     const e = m[i];
     if (typeof e !== "string" && !Array.isArray(e)) {
@@ -5517,6 +5526,58 @@ const React$1 = /* @__PURE__ */ _mergeNamespaces({
   __proto__: null,
   default: React
 }, [reactExports]);
+const flattenTextNodes = (children) => {
+  const nodes = reactExports.Children.toArray(children);
+  const result = [];
+  let buffer = "";
+  const flush = () => {
+    if (buffer !== "") {
+      result.push(buffer);
+      buffer = "";
+    }
+  };
+  for (const node of nodes) {
+    if (node == null || typeof node === "boolean") {
+      continue;
+    }
+    if (typeof node === "string" || typeof node === "number") {
+      buffer += String(node);
+      continue;
+    }
+    flush();
+    result.push(node);
+  }
+  flush();
+  return result;
+};
+const wrapTextNodeSiblings = (children) => {
+  const flattenedChildren = flattenTextNodes(children);
+  const childrenCount = reactExports.Children.count(flattenedChildren);
+  return reactExports.Children.map(flattenedChildren, (child) => {
+    if (typeof child === "string" && !!child.trim()) {
+      if (childrenCount <= 1) {
+        return child;
+      }
+      return jsxRuntimeExports.jsx("span", { children: child });
+    }
+    if (reactExports.isValidElement(child)) {
+      const element = child;
+      const { children: innerChildren, ...restProps } = element.props;
+      if (innerChildren != null) {
+        return reactExports.cloneElement(element, restProps, wrapTextNodeSiblings(innerChildren));
+      }
+      return element;
+    }
+    return child;
+  });
+};
+const Badge$1 = "_Badge_1viyg_1";
+const s$5 = {
+  Badge: Badge$1
+};
+const Badge = ({ children, className, variant = "soft", color = "secondary", size: size2 = "sm", pill, ...restMaybeAsChildProps }) => {
+  return jsxRuntimeExports.jsx("div", { className: clsx(s$5.Badge, className), "data-color": color, "data-size": size2, "data-pill": pill ? "" : void 0, "data-variant": variant, ...restMaybeAsChildProps, children: wrapTextNodeSiblings(children) });
+};
 const __vite_import_meta_env__ = { "DEV": false, "MODE": "production" };
 const META_ENV = typeof import.meta !== "undefined" ? __vite_import_meta_env__ : void 0;
 const isDev = !!META_ENV?.DEV;
@@ -5586,51 +5647,6 @@ const toCssVariables = (variables) => {
 };
 const preventDefaultHandler = (evt) => {
   evt.preventDefault();
-};
-const flattenTextNodes = (children) => {
-  const nodes = reactExports.Children.toArray(children);
-  const result = [];
-  let buffer = "";
-  const flush = () => {
-    if (buffer !== "") {
-      result.push(buffer);
-      buffer = "";
-    }
-  };
-  for (const node of nodes) {
-    if (node == null || typeof node === "boolean") {
-      continue;
-    }
-    if (typeof node === "string" || typeof node === "number") {
-      buffer += String(node);
-      continue;
-    }
-    flush();
-    result.push(node);
-  }
-  flush();
-  return result;
-};
-const wrapTextNodeSiblings = (children) => {
-  const flattenedChildren = flattenTextNodes(children);
-  const childrenCount = reactExports.Children.count(flattenedChildren);
-  return reactExports.Children.map(flattenedChildren, (child) => {
-    if (typeof child === "string" && !!child.trim()) {
-      if (childrenCount <= 1) {
-        return child;
-      }
-      return jsxRuntimeExports.jsx("span", { children: child });
-    }
-    if (reactExports.isValidElement(child)) {
-      const element = child;
-      const { children: innerChildren, ...restProps } = element.props;
-      if (innerChildren != null) {
-        return reactExports.cloneElement(element, restProps, wrapTextNodeSiblings(innerChildren));
-      }
-      return element;
-    }
-    return child;
-  });
 };
 reactExports.createContext(null);
 var lodash_debounce;
@@ -5786,11 +5802,11 @@ function useTimeout(callback, delay) {
   }, [delay]);
 }
 const LoadingIndicator$1 = "_LoadingIndicator_7yl6f_1";
-const s$5 = {
+const s$4 = {
   LoadingIndicator: LoadingIndicator$1
 };
 const LoadingIndicator = ({ className, size: size2, strokeWidth, style, ...restProps }) => {
-  return jsxRuntimeExports.jsx("div", { ...restProps, className: clsx(s$5.LoadingIndicator, className), style: style || toCssVariables({
+  return jsxRuntimeExports.jsx("div", { ...restProps, className: clsx(s$4.LoadingIndicator, className), style: style || toCssVariables({
     "indicator-size": size2,
     "indicator-stroke": strokeWidth
   }) });
@@ -5838,7 +5854,7 @@ function assertSingleChildWhenRef(componentName, ref, childrenCount) {
   }
 }
 const TransitionGroupChild$1 = "_TransitionGroupChild_1hv1z_1";
-const s$4 = {
+const s$3 = {
   TransitionGroupChild: TransitionGroupChild$1
 };
 const RESTING_TRANSITION_STATE = {
@@ -5978,7 +5994,7 @@ const TransitionGroupChildInner = ({ ref: forwardedRef, as: TagName, children, c
       preventedMountTransition.current = false;
     };
   }, []);
-  return jsxRuntimeExports.jsx(TagName, { ref: o([elementRef, forwardedRef]), className: clsx(className, s$4.TransitionGroupChild), "data-transition-id": transitionId, style, "data-entering": state.enter ? "" : void 0, "data-entering-active": state.enterActive ? "" : void 0, "data-exiting": state.exit ? "" : void 0, "data-exiting-active": state.exitActive ? "" : void 0, "data-interrupted": state.interrupted ? "" : void 0, children });
+  return jsxRuntimeExports.jsx(TagName, { ref: o([elementRef, forwardedRef]), className: clsx(className, s$3.TransitionGroupChild), "data-transition-id": transitionId, style, "data-entering": state.enter ? "" : void 0, "data-entering-active": state.enterActive ? "" : void 0, "data-exiting": state.exit ? "" : void 0, "data-exiting-active": state.exitActive ? "" : void 0, "data-interrupted": state.interrupted ? "" : void 0, children });
 };
 const TransitionGroupChild = (props) => {
   const { enterMountDelay, preventMountTransition } = props;
@@ -6046,7 +6062,7 @@ const TransitionGroup = (props) => {
 const Button$1 = "_Button_1864l_1";
 const ButtonInner = "_ButtonInner_1864l_4";
 const ButtonLoader = "_ButtonLoader_1864l_749";
-const s$3 = {
+const s$2 = {
   Button: Button$1,
   ButtonInner,
   ButtonLoader
@@ -6083,7 +6099,7 @@ const Button = (props) => {
   }, [onClick, disabled]);
   return jsxRuntimeExports.jsxs("button", {
     type,
-    className: clsx(s$3.Button, className),
+    className: clsx(s$2.Button, className),
     "data-color": color,
     "data-variant": variant,
     "data-pill": pill ? "" : void 0,
@@ -6105,7 +6121,7 @@ const Button = (props) => {
     "data-disabled-tone": disabled ? disabledTone : void 0,
     onClick: handleClick,
     ...restProps,
-    children: [jsxRuntimeExports.jsx(TransitionGroup, { className: s$3.ButtonLoader, enterDuration: 250, exitDuration: 150, children: loading && jsxRuntimeExports.jsx(LoadingIndicator, {}, "loader") }), jsxRuntimeExports.jsx("span", { className: s$3.ButtonInner, children: wrapTextNodeSiblings(children) })]
+    children: [jsxRuntimeExports.jsx(TransitionGroup, { className: s$2.ButtonLoader, enterDuration: 250, exitDuration: 150, children: loading && jsxRuntimeExports.jsx(LoadingIndicator, {}, "loader") }), jsxRuntimeExports.jsx("span", { className: s$2.ButtonInner, children: wrapTextNodeSiblings(children) })]
   });
 };
 const ChevronDown = (props) => jsxRuntimeExports.jsx("svg", { width: "1em", height: "1em", viewBox: "0 0 24 24", fill: "currentColor", ...props, children: jsxRuntimeExports.jsx("path", { fillRule: "evenodd", d: "M4.293 8.293a1 1 0 0 1 1.414 0L12 14.586l6.293-6.293a1 1 0 1 1 1.414 1.414l-7 7a1 1 0 0 1-1.414 0l-7-7a1 1 0 0 1 0-1.414Z", clipRule: "evenodd" }) });
@@ -6113,13 +6129,6 @@ const ChevronRight = (props) => jsxRuntimeExports.jsx("svg", { width: "1em", hei
 const Clock = (props) => jsxRuntimeExports.jsx("svg", { width: "1em", height: "1em", viewBox: "0 0 24 24", fill: "currentColor", ...props, children: jsxRuntimeExports.jsx("path", { d: "M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM12 6C12.5523 6 13 6.44772 13 7V12C13 12.2652 12.8946 12.5196 12.7071 12.7071L10.2071 15.2071C9.81658 15.5976 9.18342 15.5976 8.79289 15.2071C8.40237 14.8166 8.40237 14.1834 8.79289 13.7929L11 11.5858V7C11 6.44772 11.4477 6 12 6Z", fill: "currentColor" }) });
 const DollarCircle = (props) => jsxRuntimeExports.jsxs("svg", { width: "1em", height: "1em", viewBox: "0 0 24 24", fill: "currentColor", ...props, children: [jsxRuntimeExports.jsx("path", { d: "M20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z", fill: "currentColor" }), jsxRuntimeExports.jsx("path", { d: "M11.0996 17.25V16.7725C10.4057 16.6136 9.68786 16.303 8.98926 15.8213C8.5801 15.5391 8.47665 14.9785 8.75879 14.5693C9.04097 14.1603 9.6016 14.0578 10.0107 14.3398C11.0844 15.0801 12.0786 15.1937 12.7334 15.041C13.4169 14.8816 13.5996 14.51 13.5996 14.2822C13.5995 13.9547 13.4792 13.7581 13.1963 13.5566C12.852 13.3116 12.3603 13.1315 11.7021 12.9004C11.1108 12.6927 10.3519 12.434 9.75879 12.0117C9.10449 11.5458 8.59972 10.8457 8.59961 9.82031C8.59961 8.49251 9.64509 7.60906 10.7383 7.27637C10.8559 7.24059 10.9765 7.21069 11.0996 7.18555V6.75C11.0996 6.25294 11.5029 5.84961 12 5.84961C12.4971 5.84961 12.9004 6.25294 12.9004 6.75V7.20508C13.4431 7.32441 13.9882 7.54853 14.502 7.89355C14.9144 8.17073 15.0242 8.73001 14.7471 9.14258C14.4699 9.55505 13.9106 9.66479 13.498 9.3877C12.7261 8.86929 11.882 8.80928 11.2617 8.99805C10.6051 9.19796 10.4004 9.5763 10.4004 9.82031C10.4005 10.1477 10.5208 10.3435 10.8037 10.5449C11.148 10.79 11.6395 10.9709 12.2979 11.2021C12.8893 11.4099 13.648 11.6684 14.2412 12.0908C14.8955 12.5569 15.4002 13.2569 15.4004 14.2822C15.4004 15.6256 14.333 16.5162 13.1416 16.7939C13.0624 16.8124 12.9819 16.8281 12.9004 16.8418V17.25C12.9004 17.7471 12.4971 18.1504 12 18.1504C11.5029 18.1504 11.0996 17.7471 11.0996 17.25Z", fill: "currentColor" })] });
 const Sparkles = (props) => jsxRuntimeExports.jsxs("svg", { width: "1em", height: "1em", viewBox: "0 0 24 24", fill: "currentColor", ...props, children: [jsxRuntimeExports.jsx("path", { fillRule: "evenodd", d: "M9.932 4.377A1.45 1.45 0 0 1 11.375 3c.8 0 1.403.638 1.443 1.377.205 3.787 3.003 6.59 6.784 6.794A1.474 1.474 0 0 1 21 12.636c0 .816-.655 1.428-1.406 1.465-3.775.187-6.571 2.985-6.776 6.772a1.45 1.45 0 0 1-1.443 1.377 1.45 1.45 0 0 1-1.443-1.377c-.205-3.787-3.002-6.585-6.777-6.772a1.472 1.472 0 0 1-1.405-1.464c0-.815.654-1.426 1.404-1.464 3.772-.187 6.573-3.004 6.778-6.796Zm1.443 2.87a8.875 8.875 0 0 1-5.395 5.389 8.847 8.847 0 0 1 5.395 5.369 8.847 8.847 0 0 1 5.41-5.374 8.884 8.884 0 0 1-5.41-5.384Z", clipRule: "evenodd" }), jsxRuntimeExports.jsx("path", { fillRule: "evenodd", d: "M19.25 3.75a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm-3 1a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z", clipRule: "evenodd" })] });
-const Badge$1 = "_Badge_1viyg_1";
-const s$2 = {
-  Badge: Badge$1
-};
-const Badge = ({ children, className, variant = "soft", color = "secondary", size: size2 = "sm", pill, ...restMaybeAsChildProps }) => {
-  return jsxRuntimeExports.jsx("div", { className: clsx(s$2.Badge, className), "data-color": color, "data-size": size2, "data-pill": pill ? "" : void 0, "data-variant": variant, ...restMaybeAsChildProps, children: wrapTextNodeSiblings(children) });
-};
 const EmptyMessage$1 = "_EmptyMessage_1r5gu_1";
 const IconBadge = "_IconBadge_1r5gu_16";
 const Title$1 = "_Title_1r5gu_54";
@@ -21732,7 +21741,8 @@ function DelegationCard({ delegation }) {
         ] }),
         delegation.userUndelegatedList.map((item, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-sm", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("dt", { className: "text-secondary", children: [
-            "Undelegating ",
+            "Undelegating",
+            " ",
             item.seconds === 0 ? "(ready)" : `(${item.seconds}s remaining)`
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("dd", { className: "font-medium", children: [
@@ -21747,13 +21757,10 @@ function DelegationCard({ delegation }) {
 function App() {
   const toolData = useToolOutput();
   if (!toolData || !toolData.DELEGATIONS) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-8", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-      EmptyMessage,
-      {
-        title: "No delegations found",
-        description: "You don't have any active delegations to display."
-      }
-    ) });
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(EmptyMessage, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyMessage.Title, { children: "No delegations found" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyMessage.Description, { children: "You don't have any active delegations to display." })
+    ] });
   }
   const { DELEGATIONS, TOTAL_STAKED_EGLD, TOTAL_REWARDS_EGLD, PROVIDER_COUNT } = toolData;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col gap-4 p-4 max-w-lg mx-auto", children: [
@@ -21782,7 +21789,9 @@ function App() {
       {
         color: "success",
         block: true,
-        onClick: () => window.openai?.sendFollowUpMessage({ prompt: "Claim all my staking rewards" }),
+        onClick: () => window.openai?.sendFollowUpMessage({
+          prompt: "Claim all my staking rewards"
+        }),
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, {}),
           "Claim All Rewards"
@@ -21791,7 +21800,13 @@ function App() {
     ),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-secondary text-sm font-semibold uppercase tracking-wide", children: "Delegations" }),
-      DELEGATIONS.map((delegation, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx(DelegationCard, { delegation }, `${delegation.contract}-${idx}`))
+      DELEGATIONS.map((delegation, idx) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        DelegationCard,
+        {
+          delegation
+        },
+        `${delegation.contract}-${idx}`
+      ))
     ] })
   ] });
 }
@@ -21801,4 +21816,7 @@ if (rootElement) {
     /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
   );
 }
+
 </script>
+</body>
+</html>

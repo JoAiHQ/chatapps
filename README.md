@@ -79,18 +79,24 @@ The hook automatically reads from `window.openai.toolOutput` which is injected b
 ## Bundle Specifications
 
 - Built with Vite for optimal performance
-- Format: Single standalone HTML file
-- Structure follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe):
-  ```html
-  <div id="root"></div>
-  <style>{CSS}</style>
-  <script type="module">{JS}</script>
-  ```
-- OpenAI Apps SDK UI styles included
+- Format: Single standalone HTML file with full document structure
+- Structure follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe)
+- **Dark mode support**: Automatically adapts to ChatGPT's theme via `window.openai.theme`
+- OpenAI Apps SDK UI styles included with `light-dark()` CSS functions
 - Tailwind CSS purged to only used classes
 - ~700-850KB per app (includes React, ReactDOM, OpenAI SDK UI, Tailwind)
 - Compatible with ChatGPT iframe sandbox
 - Ready to upload to GitHub and use directly
+
+### Dark Mode
+
+All apps automatically support dark mode through:
+- `data-theme` attribute on the `<html>` element (values: `light`, `dark`, `auto`)
+- `color-scheme` meta tag for native browser dark mode
+- Automatic theme detection from `window.openai.theme`
+- OpenAI Apps SDK UI components with built-in dark mode support
+
+The apps will automatically adapt when ChatGPT switches between light and dark themes.
 
 ## Distribution
 

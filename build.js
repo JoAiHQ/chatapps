@@ -94,10 +94,28 @@ async function buildApp() {
     // Delete the JS file since we're creating HTML
     unlinkSync(jsPath)
 
-    // Create standalone HTML file
-    const html = `<div id="root"></div>
+    // Create standalone HTML file with dark mode support
+    // According to https://openai.github.io/apps-sdk-ui/?path=/docs/concepts-dark-mode--docs
+    // The SDK uses light-dark() CSS function and data-theme attribute
+    const html = `<!DOCTYPE html>
+<html data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <style>${cssContent}</style>
-<script type="module">${jsContent}</script>`
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+// Support theme switching via window.openai.theme
+if (window.openai?.theme) {
+  document.documentElement.setAttribute('data-theme', window.openai.theme);
+}
+${jsContent}
+</script>
+</body>
+</html>`
 
     writeFileSync(htmlPath, html.trim())
 
