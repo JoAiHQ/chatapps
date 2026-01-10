@@ -1,6 +1,6 @@
 export const Config = {
   Tools: {
-    StakingClaim: 'staking_claim',
-    StakingClaimAll: 'staking_claim_all',
+    StakingClaim: 'multiversx.multiversx-staking-claim',
+    StakingClaimAll: 'multiversx.multiversx-staking-claim-all',
   },
 }
