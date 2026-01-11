@@ -11,5 +11,17 @@ import { useOpenAiGlobal } from './useOpenAiGlobal'
  */
 export function useToolOutput<T = any>(): T | undefined {
   const toolOutput = useOpenAiGlobal('toolOutput')
-  return toolOutput as T | undefined
+  if (!toolOutput) {
+    return undefined
+  }
+
+  if (typeof toolOutput === 'object') {
+    const structuredContent = (toolOutput as { structuredContent?: unknown })
+      .structuredContent
+    if (structuredContent !== undefined) {
+      return structuredContent as T
+    }
+  }
+
+  return toolOutput as T
 }
