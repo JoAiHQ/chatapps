@@ -1,6 +1,12 @@
 import { build } from 'vite'
 import react from '@vitejs/plugin-react'
-import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs'
+import {
+  readFileSync,
+  writeFileSync,
+  existsSync,
+  unlinkSync,
+  readdirSync,
+} from 'fs'
 import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
@@ -13,20 +19,13 @@ const __dirname = dirname(__filename)
 const appName = process.argv[2]
 const watchMode = process.argv.includes('--watch') || process.argv.includes('-w')
 const typecheck = !process.argv.includes('--no-typecheck')
+let didTypecheck = false
 
-if (!appName) {
+if (watchMode && !appName) {
+  console.error('Watch mode requires a specific app.')
   console.error('Usage: node build.js <brand/appname> [--watch] [--no-typecheck]')
-  console.error('Examples:')
-  console.error('  node build.js counter')
-  console.error('  node build.js multiversx/account')
   process.exit(1)
 }
-
-const appDir = resolve(__dirname, 'src/apps', appName)
-const entryPoint = resolve(appDir, 'index.tsx')
-const stylesCssPath = resolve(appDir, 'styles.css')
-const distDir = resolve(__dirname, 'dist')
-const outfile = `${appName.replace(/\//g, '-')}.js`
 
 // Create a virtual entry plugin that includes CSS
 function wrapEntryPlugin(virtualId, entryFile, cssFile) {
@@ -48,7 +47,7 @@ import ${JSON.stringify(entryFile)};
 }
 
 async function typeCheck() {
-  if (!typecheck) {
+  if (!typecheck || didTypecheck) {
     return
   }
 
@@ -59,6 +58,7 @@ async function typeCheck() {
       stdio: 'inherit',
     })
     console.log('✓ TypeScript check passed')
+    didTypecheck = true
   } catch (error) {
     console.error('✗ TypeScript check failed')
     if (!watchMode) {
@@ -68,13 +68,18 @@ async function typeCheck() {
   }
 }
 
-async function buildApp() {
+async function buildApp(targetAppName) {
   try {
-    console.log(`Building ${appName}...`)
+    console.log(`Building ${targetAppName}...`)
 
     // Run TypeScript check before building
     await typeCheck()
 
+    const appDir = resolve(__dirname, 'src/apps', targetAppName)
+    const entryPoint = resolve(appDir, 'index.tsx')
+    const stylesCssPath = resolve(appDir, 'styles.css')
+    const distDir = resolve(__dirname, 'dist')
+    const outfile = `${targetAppName.replace(/\//g, '-')}.js`
     const virtualId = `\0virtual-entry:${entryPoint}`
 
     await build({
@@ -149,13 +154,38 @@ ${jsContent}
 
     writeFileSync(htmlPath, html.trim())
 
-    console.log(`✓ Built ${appName} → dist/${appName}.html`)
+    console.log(`✓ Built ${targetAppName} → dist/${targetAppName}.html`)
   } catch (error) {
-    console.error(`✗ Build failed for ${appName}:`, error)
+    console.error(`✗ Build failed for ${targetAppName}:`, error)
     if (!watchMode) {
       process.exit(1)
     }
   }
+}
+
+function listApps() {
+  const appsRoot = resolve(__dirname, 'src/apps')
+  const entries = []
+
+  for (const entry of readdirSync(appsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const topLevel = entry.name
+    const topLevelIndex = resolve(appsRoot, topLevel, 'index.tsx')
+    if (existsSync(topLevelIndex)) {
+      entries.push(topLevel)
+      continue
+    }
+    const nestedDir = resolve(appsRoot, topLevel)
+    for (const nested of readdirSync(nestedDir, { withFileTypes: true })) {
+      if (!nested.isDirectory()) continue
+      const nestedIndex = resolve(nestedDir, nested.name, 'index.tsx')
+      if (existsSync(nestedIndex)) {
+        entries.push(`${topLevel}/${nested.name}`)
+      }
+    }
+  }
+
+  return entries
 }
 
 async function watchApp() {
@@ -195,7 +225,7 @@ async function watchApp() {
 
     buildTimeout = setTimeout(async () => {
       console.log(`🔄 Rebuilding ${appName}...`)
-      await buildApp()
+      await buildApp(appName)
     }, 100)
   })
 
@@ -204,11 +234,29 @@ async function watchApp() {
   })
 
   // Initial build
-  await buildApp()
+  await buildApp(appName)
 }
 
-if (watchMode) {
-  watchApp()
-} else {
-  buildApp()
+async function main() {
+  if (watchMode) {
+    await watchApp()
+    return
+  }
+
+  if (!appName) {
+    const apps = listApps()
+    if (apps.length === 0) {
+      console.error('No apps found in src/apps.')
+      process.exit(1)
+    }
+    console.log(`Building ${apps.length} apps...`)
+    for (const targetAppName of apps) {
+      await buildApp(targetAppName)
+    }
+    return
+  }
+
+  await buildApp(appName)
 }
+
+main()
