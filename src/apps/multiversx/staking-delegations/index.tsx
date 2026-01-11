@@ -5,6 +5,7 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  CheckCircle,
   DollarCircle,
   Sparkles,
 } from '@openai/apps-sdk-ui/components/Icon'
@@ -18,6 +19,7 @@ import { Config } from './config'
 
 export function DelegationCard({ delegation }: { delegation: Delegation }) {
   const [expanded, setExpanded] = useState(false)
+  const [claimRequested, setClaimRequested] = useState(false)
   const activeStake = formatEgld(delegation.userActiveStake)
   const rewards = formatEgld(delegation.claimableRewards)
   const unbondable = formatEgld(delegation.userUnBondable)
@@ -63,21 +65,28 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
           </dd>
         </div>
       </dl>
-      {hasRewards && (
+      {hasRewards && !claimRequested && (
         <Button
           color="success"
           size="sm"
           block
           className="mb-3"
-          onClick={() =>
+          onClick={() => {
+            setClaimRequested(true)
             window.openai?.callTool(Config.Tools.StakingClaim, {
               PROVIDER: delegation.contract,
             })
-          }
+          }}
         >
           <Sparkles />
           Claim Rewards
         </Button>
+      )}
+      {hasRewards && claimRequested && (
+        <div className="mb-3 rounded-xl border border-success/30 bg-success/10 px-3 py-2 text-sm text-success flex items-center gap-2">
+          <CheckCircle className="size-4" />
+          Claim initiated. Watch the chat for confirmation.
+        </div>
       )}
       {(hasUndelegated || hasUnbondable) && (
         <div className="border-t border-subtle pt-3 mt-3">
@@ -126,6 +135,7 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
 
 export function App() {
   const toolData = useToolOutput<DelegationData>()
+  const [claimAllRequested, setClaimAllRequested] = useState(false)
 
   if (!toolData || !toolData.DELEGATIONS) {
     return (
@@ -171,18 +181,26 @@ export function App() {
           </div>
         </dl>
       </div>
-      <Button
-        color="success"
-        block
-        onClick={() =>
-          window.openai?.sendFollowUpMessage({
-            prompt: 'Claim all my staking rewards',
-          })
-        }
-      >
-        <Sparkles />
-        Claim All Rewards
-      </Button>
+      {!claimAllRequested ? (
+        <Button
+          color="success"
+          block
+          onClick={() => {
+            setClaimAllRequested(true)
+            window.openai?.sendFollowUpMessage({
+              prompt: 'Claim all my staking rewards',
+            })
+          }}
+        >
+          <Sparkles />
+          Claim All Rewards
+        </Button>
+      ) : (
+        <div className="rounded-2xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success flex items-center justify-center gap-2">
+          <CheckCircle className="size-4" />
+          Claim all request sent. Check chat for updates.
+        </div>
+      )}
       <div className="space-y-3">
         <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">
           Delegations
