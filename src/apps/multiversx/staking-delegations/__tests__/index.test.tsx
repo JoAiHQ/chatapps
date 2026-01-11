@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { App } from '../index'
-import { setToolOutput } from '../../../test/mockOpenAi'
+import { setToolOutput } from '../../../../test/mockOpenAi'
 
 const structuredDelegations = {
   DELEGATIONS: [
