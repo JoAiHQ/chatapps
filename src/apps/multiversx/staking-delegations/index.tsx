@@ -16,12 +16,13 @@ import { formatEgld, shortenAddress } from '../helpers'
 import { Delegation, DelegationData } from '../types'
 import { Config } from './config'
 
-function DelegationCard({ delegation }: { delegation: Delegation }) {
+export function DelegationCard({ delegation }: { delegation: Delegation }) {
   const [expanded, setExpanded] = useState(false)
   const activeStake = formatEgld(delegation.userActiveStake)
   const rewards = formatEgld(delegation.claimableRewards)
   const unbondable = formatEgld(delegation.userUnBondable)
-  const hasUndelegated = delegation.userUndelegatedList.length > 0
+  const undelegatedList = delegation.userUndelegatedList ?? []
+  const hasUndelegated = undelegatedList.length > 0
   const hasUnbondable = BigInt(delegation.userUnBondable) > 0
   const hasRewards = BigInt(delegation.claimableRewards) > 0
 
@@ -102,7 +103,7 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
                   <dd className="font-medium">{unbondable} EGLD</dd>
                 </div>
               )}
-              {delegation.userUndelegatedList.map((item, idx) => (
+              {undelegatedList.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
                   <dt className="text-secondary">
                     Undelegating{' '}
@@ -123,7 +124,7 @@ function DelegationCard({ delegation }: { delegation: Delegation }) {
   )
 }
 
-function App() {
+export function App() {
   const toolData = useToolOutput<DelegationData>()
 
   if (!toolData || !toolData.DELEGATIONS) {

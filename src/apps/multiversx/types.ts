@@ -25,7 +25,7 @@ export type Delegation = {
   userUnBondable: string
   userActiveStake: string
   claimableRewards: string
-  userUndelegatedList: UndelegatedItem[]
+  userUndelegatedList?: UndelegatedItem[]
 }
 
 export type DelegationData = {
