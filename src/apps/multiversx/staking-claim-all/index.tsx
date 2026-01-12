@@ -10,6 +10,7 @@ import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../../lib/hooks'
+import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
 import { ClaimAllRewardsData, ProviderClaim } from '../types'
 
@@ -62,7 +63,11 @@ function ClaimCard({ claim }: { claim: ProviderClaim }) {
 function App() {
   const toolData = useToolOutput<ClaimAllRewardsData>()
 
-  if (!toolData || !toolData.CLAIMS || toolData.CLAIMS.length === 0) {
+  if (!toolData) {
+    return <EmptyMessageSkeleton />
+  }
+
+  if (!toolData.CLAIMS || toolData.CLAIMS.length === 0) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No claims found</EmptyMessage.Title>

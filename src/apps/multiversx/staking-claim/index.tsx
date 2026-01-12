@@ -9,13 +9,18 @@ import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../../lib/hooks'
+import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
 import { ClaimRewardsData } from '../types'
 
 function App() {
   const toolData = useToolOutput<ClaimRewardsData>()
 
-  if (!toolData || !toolData.TX_HASH) {
+  if (!toolData) {
+    return <EmptyMessageSkeleton />
+  }
+
+  if (!toolData.TX_HASH) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No data available</EmptyMessage.Title>

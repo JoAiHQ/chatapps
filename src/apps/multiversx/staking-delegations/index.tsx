@@ -13,6 +13,7 @@ import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { useToolOutput } from '../../../lib/hooks'
+import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { formatEgld, shortenAddress } from '../helpers'
 import { Delegation, DelegationData } from '../types'
 import { Config } from './config'
@@ -137,7 +138,11 @@ export function App() {
   const toolData = useToolOutput<DelegationData>()
   const [claimAllRequested, setClaimAllRequested] = useState(false)
 
-  if (!toolData || !toolData.DELEGATIONS) {
+  if (!toolData) {
+    return <EmptyMessageSkeleton />
+  }
+
+  if (!toolData.DELEGATIONS) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No delegations found</EmptyMessage.Title>
