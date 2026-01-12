@@ -2,10 +2,10 @@ import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
 import {
+  CheckCircle,
   ChevronDown,
   ChevronRight,
   Clock,
-  CheckCircle,
   DollarCircle,
   Sparkles,
 } from '@openai/apps-sdk-ui/components/Icon'
@@ -84,9 +84,13 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
         </Button>
       )}
       {hasRewards && claimRequested && (
-        <div className="mb-3 rounded-xl border border-success/30 bg-success/10 px-3 py-2 text-sm text-success flex items-center gap-2">
+        <div
+          className="mb-3 rounded-xl border border-success/30 bg-success/10 px-3 py-2 text-sm text-success flex items-center gap-2 shadow-sm"
+          role="status"
+          aria-live="polite"
+        >
           <CheckCircle className="size-4" />
-          Claim initiated. Watch the chat for confirmation.
+          Claim request sent.
         </div>
       )}
       {(hasUndelegated || hasUnbondable) && (
@@ -201,9 +205,13 @@ export function App() {
           Claim All Rewards
         </Button>
       ) : (
-        <div className="rounded-2xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success flex items-center justify-center gap-2">
+        <div
+          className="rounded-2xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success flex items-center justify-center gap-2 shadow-sm"
+          role="status"
+          aria-live="polite"
+        >
           <CheckCircle className="size-4" />
-          Claim all request sent. Check chat for updates.
+          Claim request sent.
         </div>
       )}
       <div className="space-y-3">
