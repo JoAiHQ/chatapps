@@ -2,10 +2,9 @@ import { Alert } from '@openai/apps-sdk-ui/components/Alert'
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 
 export type UpgradePromptData = {
+  title?: string
+  body?: string
   paymentUrl?: string
-  feature?: string
-  message?: string
-  buttonLabel?: string
   ['_joai/upgrade']?: boolean
 }
 
@@ -15,9 +14,8 @@ type UpgradePromptProps = {
 
 export function UpgradePrompt({ data }: UpgradePromptProps) {
   const paymentUrl = data?.paymentUrl
-  const title = `Upgrade to unlock ${data?.feature || 'this feature'}`
-  const message = data?.message ?? 'Upgrade to get premium features and higher limits in seconds.'
-  const buttonLabel = data?.buttonLabel ?? 'Upgrade now'
+  const title = data?.title ?? 'Upgrade to unlock this feature'
+  const message = data?.body ?? 'Upgrade to get premium features and higher limits in seconds.'
 
   const handlePaymentClick = () => {
     if (!paymentUrl) return
@@ -36,7 +34,7 @@ export function UpgradePrompt({ data }: UpgradePromptProps) {
       description={message}
       actions={
         <Button color="primary" onClick={handlePaymentClick} disabled={!paymentUrl} variant="soft">
-          {buttonLabel}
+          Upgrade now
         </Button>
       }
     />
