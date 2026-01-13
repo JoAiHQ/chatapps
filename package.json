@@ -5,6 +5,7 @@
   "scripts": {
     "build": "node build.js",
     "dev": "node server.js",
+    "prepare": "git config core.hooksPath .githooks",
     "test": "vitest run",
     "test:watch": "vitest"
   },
