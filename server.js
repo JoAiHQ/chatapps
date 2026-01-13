@@ -38,9 +38,12 @@ app.get('/:appname', (req, res) => {
           try {
             const response = await fetch('/${appName}/check');
             const data = await response.json();
-            if (data.mtime > lastCheck) {
+            if (data.changed || data.mtime > lastCheck) {
               console.log('🔄 File changed, reloading...');
               window.location.reload();
+            }
+            if (data.mtime) {
+              lastCheck = data.mtime;
             }
           } catch (e) {
             // Ignore errors
@@ -53,6 +56,7 @@ app.get('/:appname', (req, res) => {
   }
 
   res.setHeader('Content-Type', 'text/html')
+  res.setHeader('Cache-Control', 'no-store')
   res.removeHeader('X-Frame-Options')
   res.send(html)
 })
