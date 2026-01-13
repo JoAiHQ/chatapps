@@ -1,25 +1,30 @@
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 import { Card } from '@openai/apps-sdk-ui/components/Icon'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../../lib/hooks'
 
-type PaymentToolData = {
+export type UpgradePromptData = {
   paymentUrl?: string
   feature?: string
   message?: string
   buttonLabel?: string
+  ['_joai/upgrade']?: boolean
 }
 
-function App() {
-  const toolData = useToolOutput<PaymentToolData>()
-  const paymentUrl = toolData?.paymentUrl
-  const title = `Upgrade to unlock ${toolData?.feature || 'this feature'}`
-  const message = toolData?.message ?? 'Upgrade to get premium features and higher limits in seconds.'
-  const buttonLabel = toolData?.buttonLabel ?? 'Upgrade now'
+type UpgradePromptProps = {
+  data?: UpgradePromptData
+}
+
+export function UpgradePrompt({ data }: UpgradePromptProps) {
+  const paymentUrl = data?.paymentUrl
+  const title = `Upgrade to unlock ${data?.feature || 'this feature'}`
+  const message = data?.message ?? 'Upgrade to get premium features and higher limits in seconds.'
+  const buttonLabel = data?.buttonLabel ?? 'Upgrade now'
 
   const handlePaymentClick = () => {
     if (!paymentUrl) return
+    if (window.openai?.openExternal) {
+      window.openai.openExternal({ href: paymentUrl })
+      return
+    }
     window.open(paymentUrl, '_blank', 'noopener,noreferrer')
   }
 
@@ -37,24 +42,17 @@ function App() {
         </div>
         <div className="mt-4 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning">{message}</div>
         <div className="mt-6">
-          <Button color="primary" block onClick={handlePaymentClick}>
+          <Button color="primary" block onClick={handlePaymentClick} disabled={!paymentUrl}>
             {buttonLabel}
           </Button>
         </div>
         <p className="mt-3 text-xs text-secondary">Secure checkout. Instant unlock.</p>
-        <div className="mt-2 break-all rounded-xl border border-subtle bg-surface-secondary px-3 py-2 text-xs text-secondary">
-          {paymentUrl}
-        </div>
+        {paymentUrl && (
+          <div className="mt-2 break-all rounded-xl border border-subtle bg-surface-secondary px-3 py-2 text-xs text-secondary">
+            {paymentUrl}
+          </div>
+        )}
       </div>
     </div>
-  )
-}
-
-const rootElement = document.getElementById('root')
-if (rootElement) {
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
   )
 }

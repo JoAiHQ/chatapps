@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import { App } from '../index'
+import { App } from '../../../../lib/components'
 import { setToolOutput } from '../../../../test/mockOpenAi'
+import { Main } from '../index'
 
 const structuredDelegations = {
   DELEGATIONS: [
@@ -38,7 +39,11 @@ describe('staking delegations app', () => {
       structuredContent: structuredDelegations,
     })
 
-    render(<App />)
+    render(
+      <App>
+        <Main />
+      </App>
+    )
 
     expect(screen.getByText('Your staked eGold')).toBeInTheDocument()
     expect(screen.getByText('2 providers')).toBeInTheDocument()

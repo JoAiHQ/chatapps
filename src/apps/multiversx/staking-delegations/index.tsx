@@ -1,24 +1,18 @@
 import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
-import {
-  CheckCircle,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  DollarCircle,
-  Sparkles,
-} from '@openai/apps-sdk-ui/components/Icon'
+import { CheckCircle, ChevronDown, ChevronRight, Clock, DollarCircle, Sparkles } from '@openai/apps-sdk-ui/components/Icon'
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../../lib/hooks'
+import { App, useAppContext } from '../../../lib/components'
+import { AppExecute } from '../../../lib/hooks'
 import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { formatEgld, shortenAddress } from '../helpers'
 import { Delegation, DelegationData } from '../types'
 import { Config } from './config'
 
-export function DelegationCard({ delegation }: { delegation: Delegation }) {
+export function DelegationCard({ delegation, executeTool }: { delegation: Delegation; executeTool: AppExecute }) {
   const [expanded, setExpanded] = useState(false)
   const [claimRequested, setClaimRequested] = useState(false)
   const activeStake = formatEgld(delegation.userActiveStake)
@@ -35,9 +29,7 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
         <div className="flex-1 min-w-0">
           <p className="text-secondary text-sm">Provider</p>
           <Tooltip content={delegation.contract}>
-            <p className="font-mono text-sm truncate cursor-help">
-              {shortenAddress(delegation.contract)}
-            </p>
+            <p className="font-mono text-sm truncate cursor-help">{shortenAddress(delegation.contract)}</p>
           </Tooltip>
         </div>
         {hasUndelegated && (
@@ -74,7 +66,7 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
           className="mb-3"
           onClick={() => {
             setClaimRequested(true)
-            window.openai?.callTool(Config.Tools.StakingClaim, {
+            executeTool(Config.Tools.StakingClaim, {
               PROVIDER: delegation.contract,
             })
           }}
@@ -95,15 +87,8 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
       )}
       {(hasUndelegated || hasUnbondable) && (
         <div className="border-t border-subtle pt-3 mt-3">
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="text-sm text-link hover:underline flex items-center gap-1"
-          >
-            {expanded ? (
-              <ChevronDown className="size-4" />
-            ) : (
-              <ChevronRight className="size-4" />
-            )}
+          <button onClick={() => setExpanded(!expanded)} className="text-sm text-link hover:underline flex items-center gap-1">
+            {expanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
             Unbonding Details
           </button>
           {expanded && (
@@ -119,15 +104,8 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
               )}
               {undelegatedList.map((item, idx) => (
                 <div key={idx} className="flex justify-between text-sm">
-                  <dt className="text-secondary">
-                    Undelegating{' '}
-                    {item.seconds === 0
-                      ? '(ready)'
-                      : `(${item.seconds}s remaining)`}
-                  </dt>
-                  <dd className="font-medium">
-                    {formatEgld(item.amount)} EGLD
-                  </dd>
+                  <dt className="text-secondary">Undelegating {item.seconds === 0 ? '(ready)' : `(${item.seconds}s remaining)`}</dt>
+                  <dd className="font-medium">{formatEgld(item.amount)} EGLD</dd>
                 </div>
               ))}
             </dl>
@@ -138,54 +116,41 @@ export function DelegationCard({ delegation }: { delegation: Delegation }) {
   )
 }
 
-export function App() {
-  const toolData = useToolOutput<DelegationData>()
+export function Main() {
   const [claimAllRequested, setClaimAllRequested] = useState(false)
+  const { data, executeTool, executePrompt } = useAppContext<DelegationData>()
 
-  if (!toolData) {
+  if (!data) {
     return <EmptyMessageSkeleton />
   }
 
-  if (!toolData.DELEGATIONS) {
+  if (!data.DELEGATIONS) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No delegations found</EmptyMessage.Title>
-        <EmptyMessage.Description>
-          You don't have any active delegations to display.
-        </EmptyMessage.Description>
+        <EmptyMessage.Description>You don't have any active delegations to display.</EmptyMessage.Description>
       </EmptyMessage>
     )
   }
-
-  const { DELEGATIONS, TOTAL_STAKED_EGLD, TOTAL_REWARDS_EGLD, PROVIDER_COUNT } =
-    toolData
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-lg mx-auto">
       <div className="text-center mb-2">
         <h1 className="heading-lg">Your staked eGold</h1>
         <p className="text-secondary text-sm mt-1">
-          {PROVIDER_COUNT} provider{PROVIDER_COUNT !== 1 ? 's' : ''}
+          {data.PROVIDER_COUNT} provider{data.PROVIDER_COUNT !== 1 ? 's' : ''}
         </p>
       </div>
       <div className="rounded-2xl border border-default bg-surface-secondary p-4">
         <dl className="grid grid-cols-2 gap-4">
           <div className="text-center">
-            <dt className="text-secondary text-xs uppercase tracking-wide">
-              Total Staked
-            </dt>
-            <dd className="text-2xl font-bold text-primary mt-1">
-              {TOTAL_STAKED_EGLD.toFixed(2)}
-            </dd>
+            <dt className="text-secondary text-xs uppercase tracking-wide">Total Staked</dt>
+            <dd className="text-2xl font-bold text-primary mt-1">{data.TOTAL_STAKED_EGLD.toFixed(2)}</dd>
             <dd className="text-secondary text-xs">EGLD</dd>
           </div>
           <div className="text-center">
-            <dt className="text-secondary text-xs uppercase tracking-wide">
-              Total Rewards
-            </dt>
-            <dd className="text-2xl font-bold text-success mt-1">
-              {TOTAL_REWARDS_EGLD.toFixed(2)}
-            </dd>
+            <dt className="text-secondary text-xs uppercase tracking-wide">Total Rewards</dt>
+            <dd className="text-2xl font-bold text-success mt-1">{data.TOTAL_REWARDS_EGLD.toFixed(2)}</dd>
             <dd className="text-secondary text-xs">EGLD</dd>
           </div>
         </dl>
@@ -196,9 +161,7 @@ export function App() {
           block
           onClick={() => {
             setClaimAllRequested(true)
-            window.openai?.sendFollowUpMessage({
-              prompt: 'Claim all my staking rewards',
-            })
+            executePrompt('Claim all my staking rewards')
           }}
         >
           <Sparkles />
@@ -215,14 +178,9 @@ export function App() {
         </div>
       )}
       <div className="space-y-3">
-        <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">
-          Delegations
-        </h2>
-        {DELEGATIONS.map((delegation, idx) => (
-          <DelegationCard
-            key={`${delegation.contract}-${idx}`}
-            delegation={delegation}
-          />
+        <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">Delegations</h2>
+        {data.DELEGATIONS.map((delegation, idx) => (
+          <DelegationCard key={`${delegation.contract}-${idx}`} delegation={delegation} executeTool={executeTool} />
         ))}
       </div>
     </div>
@@ -233,7 +191,9 @@ const rootElement = document.getElementById('root')
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <App>
+        <Main />
+      </App>
     </React.StrictMode>
   )
 }

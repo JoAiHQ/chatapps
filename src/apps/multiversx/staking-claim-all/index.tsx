@@ -1,15 +1,10 @@
 import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
-import {
-  CheckCircle,
-  DollarCircle,
-  ExternalLink,
-  Sparkles,
-} from '@openai/apps-sdk-ui/components/Icon'
+import { CheckCircle, DollarCircle, ExternalLink, Sparkles } from '@openai/apps-sdk-ui/components/Icon'
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../../lib/hooks'
+import { App, useAppContext } from '../../../lib/components'
 import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
 import { ClaimAllRewardsData, ProviderClaim } from '../types'
@@ -23,9 +18,7 @@ function ClaimCard({ claim }: { claim: ProviderClaim }) {
         <div className="flex-1 min-w-0">
           <p className="text-secondary text-sm">Provider</p>
           <Tooltip content={claim.provider}>
-            <p className="font-mono text-sm truncate cursor-help">
-              {shortenAddress(claim.provider)}
-            </p>
+            <p className="font-mono text-sm truncate cursor-help">{shortenAddress(claim.provider)}</p>
           </Tooltip>
         </div>
         <Badge color="success" className="ml-2 shrink-0">
@@ -38,8 +31,7 @@ function ClaimCard({ claim }: { claim: ProviderClaim }) {
           Claimed
         </div>
         <div className="text-lg font-semibold text-success">
-          {claim.rewardsClaimedEgld.toFixed(4)}{' '}
-          <span className="text-sm text-secondary">EGLD</span>
+          {claim.rewardsClaimedEgld.toFixed(4)} <span className="text-sm text-secondary">EGLD</span>
         </div>
       </div>
       <div className="border-t border-subtle pt-3">
@@ -60,25 +52,21 @@ function ClaimCard({ claim }: { claim: ProviderClaim }) {
   )
 }
 
-function App() {
-  const toolData = useToolOutput<ClaimAllRewardsData>()
+function Main() {
+  const { data } = useAppContext<ClaimAllRewardsData>()
 
-  if (!toolData) {
+  if (!data) {
     return <EmptyMessageSkeleton />
   }
 
-  if (!toolData.CLAIMS || toolData.CLAIMS.length === 0) {
+  if (!data.CLAIMS || data.CLAIMS.length === 0) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No claims found</EmptyMessage.Title>
-        <EmptyMessage.Description>
-          No rewards were claimed.
-        </EmptyMessage.Description>
+        <EmptyMessage.Description>No rewards were claimed.</EmptyMessage.Description>
       </EmptyMessage>
     )
   }
-
-  const { CLAIMS, TOTAL_REWARDS_CLAIMED_EGLD, PROVIDER_COUNT } = toolData
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-lg mx-auto">
@@ -88,7 +76,7 @@ function App() {
           <h1 className="heading-lg">All Rewards Claimed!</h1>
         </div>
         <p className="text-secondary text-sm">
-          {PROVIDER_COUNT} provider{PROVIDER_COUNT !== 1 ? 's' : ''}
+          {data.PROVIDER_COUNT} provider{data.PROVIDER_COUNT !== 1 ? 's' : ''}
         </p>
       </div>
       <div className="rounded-2xl border border-default bg-surface-secondary p-4">
@@ -97,17 +85,13 @@ function App() {
             <DollarCircle className="size-4" />
             Total Claimed
           </div>
-          <p className="text-3xl font-bold text-success">
-            {TOTAL_REWARDS_CLAIMED_EGLD.toFixed(4)}
-          </p>
+          <p className="text-3xl font-bold text-success">{data.TOTAL_REWARDS_CLAIMED_EGLD.toFixed(4)}</p>
           <p className="text-secondary text-sm mt-1">EGLD</p>
         </div>
       </div>
       <div className="space-y-3">
-        <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">
-          Claims
-        </h2>
-        {CLAIMS.map((claim, idx) => (
+        <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">Claims</h2>
+        {data.CLAIMS.map((claim, idx) => (
           <ClaimCard key={`${claim.provider}-${idx}`} claim={claim} />
         ))}
       </div>
@@ -119,7 +103,9 @@ const rootElement = document.getElementById('root')
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <App>
+        <Main />
+      </App>
     </React.StrictMode>
   )
 }

@@ -1,38 +1,31 @@
 import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
-import {
-  CheckCircle,
-  DollarCircle,
-  ExternalLink,
-} from '@openai/apps-sdk-ui/components/Icon'
+import { CheckCircle, DollarCircle, ExternalLink } from '@openai/apps-sdk-ui/components/Icon'
 import { Tooltip } from '@openai/apps-sdk-ui/components/Tooltip'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { useToolOutput } from '../../../lib/hooks'
+import { App, useAppContext } from '../../../lib/components'
 import { EmptyMessageSkeleton } from '../../../lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
 import { ClaimRewardsData } from '../types'
 
-function App() {
-  const toolData = useToolOutput<ClaimRewardsData>()
+function Main() {
+  const { data } = useAppContext<ClaimRewardsData>()
 
-  if (!toolData) {
+  if (!data) {
     return <EmptyMessageSkeleton />
   }
 
-  if (!toolData.TX_HASH) {
+  if (!data.TX_HASH) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No data available</EmptyMessage.Title>
-        <EmptyMessage.Description>
-          Rewards claim information is not available.
-        </EmptyMessage.Description>
+        <EmptyMessage.Description>Rewards claim information is not available.</EmptyMessage.Description>
       </EmptyMessage>
     )
   }
 
-  const { TX_HASH, PROVIDER, REWARDS_CLAIMED_EGLD } = toolData
-  const explorerUrl = `https://explorer.multiversx.com/transactions/${TX_HASH}`
+  const explorerUrl = `https://explorer.multiversx.com/transactions/${data.TX_HASH}`
 
   return (
     <div className="flex flex-col gap-4 p-4 max-w-lg mx-auto">
@@ -47,9 +40,7 @@ function App() {
         <div className="flex items-center justify-center mb-4">
           <div className="text-center">
             <p className="text-secondary text-sm mb-1">Claimed Amount</p>
-            <p className="text-3xl font-bold text-success">
-              {REWARDS_CLAIMED_EGLD.toFixed(4)}
-            </p>
+            <p className="text-3xl font-bold text-success">{data.REWARDS_CLAIMED_EGLD.toFixed(4)}</p>
             <p className="text-secondary text-sm">EGLD</p>
           </div>
         </div>
@@ -59,10 +50,8 @@ function App() {
               <DollarCircle className="size-4" />
               Provider
             </dt>
-            <Tooltip content={PROVIDER}>
-              <dd className="font-mono text-sm truncate cursor-help">
-                {shortenAddress(PROVIDER)}
-              </dd>
+            <Tooltip content={data.PROVIDER}>
+              <dd className="font-mono text-sm truncate cursor-help">{shortenAddress(data.PROVIDER)}</dd>
             </Tooltip>
           </div>
           <div>
@@ -70,14 +59,14 @@ function App() {
               <ExternalLink className="size-4" />
               Transaction
             </dt>
-            <Tooltip content={TX_HASH}>
+            <Tooltip content={data.TX_HASH}>
               <a
                 href={explorerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-sm text-link hover:underline cursor-pointer block truncate"
               >
-                {shortenHash(TX_HASH)}
+                {shortenHash(data.TX_HASH)}
               </a>
             </Tooltip>
           </div>
@@ -91,7 +80,9 @@ const rootElement = document.getElementById('root')
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <App>
+        <Main />
+      </App>
     </React.StrictMode>
   )
 }
