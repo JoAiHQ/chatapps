@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useApp, UseAppResult } from '../hooks/useApp'
-import { UpgradePrompt, UpgradePromptData } from './Billing/UpgradePrompt'
+import { UpgradePrompt } from './Billing/UpgradePrompt'
 
 const AppContext = React.createContext<UseAppResult<any> | null>(null)
 
@@ -12,7 +12,8 @@ export function App(props: Props) {
   const app = useApp()
 
   if (app.paymentRequired) {
-    return <UpgradePrompt data={app.meta as UpgradePromptData} />
+    const meta = app.meta as { title: string; description: string; paymentUrl: string }
+    return <UpgradePrompt title={meta.title} description={meta.description} paymentUrl={meta.paymentUrl} />
   }
 
   return <AppContext.Provider value={app}>{props.children}</AppContext.Provider>
