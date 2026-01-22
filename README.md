@@ -1,6 +1,49 @@
-# ChatGPT Apps SDK Builder
+# 🚀 ChatApps
 
-A development environment for building chat app UIs—create UIs for your Warps and ChatGPT apps in general.
+**ChatApps** is a framework for building native AI applications that integrate [supported blockchains](https://docs.joai.ai/warps/chains) into popular AI platforms like ChatGPT, Claude, Cursor, and other MCP-enabled interfaces. It turns conversations into on-chain and off-chain execution across all supported chains.
+
+### 🤖 What are ChatApps?
+
+ChatApps are native AI applications that can be published to app stores like the ChatGPT App Store. They combine:
+
+- **Warps**: Open-source protocol for skills that act on-chain and off-chain.
+- **Dynamic MCP**: JoAi automatically spins up MCP servers per Warp on demand. See [MCP documentation](https://docs.joai.ai/protocols/mcp) for details.
+- **Warp UI**: Visual representation for Warps, compatible with the ChatGPT Apps SDK.
+- **Cloud Wallet**: Full abstraction with Warp Wallets via cloud wallet providers (TEEs for wallet signatures).
+- **Open-source ChatApp framework**: For building Warp UIs.
+
+### ✨ Key Features
+
+- **Fast Development**: Because of the ease of use and speed in creating Warps, ChatApps are the fastest and most scalable way to create native ChatGPT Apps today.
+- **Multi-Client Support**: Works with ChatGPT, Claude, Cursor, and other MCP-enabled interfaces.
+- **Secure Authentication**: Cloud wallets + OAuth handle authentication and hosted execution; TEEs secure signatures.
+- **Native Blockchain Integration**: Warp UI renders inside ChatGPT Apps for state, actions, and confirmations with verified on-chain execution.
+
+### 📦 Publishing to App Stores
+
+ChatApps can be published to the ChatGPT App Store and other compatible platforms. Publishing tooling helps ship ChatApps at scale.
+
+## 🏁 Getting Started
+
+To build ChatApps:
+
+1. Create Warps using the [Warps framework](https://docs.joai.ai/warps/general).
+2. Dynamic MCP endpoints are automatically configured by JoAi.
+3. Build Warp UI components compatible with ChatGPT Apps SDK.
+4. Set up Cloud Wallet integration.
+5. Publish to app stores.
+
+## 📚 Resources
+
+- **GitHub Repository**: [https://github.com/JoAiHQ](https://github.com/JoAiHQ) - Open-source ChatApp framework and examples.
+- **Warps Documentation**: [Warps framework](https://docs.joai.ai/warps/general)
+- **MCP Documentation**: [Dynamic MCP details](https://docs.joai.ai/protocols/mcp)
+
+---
+
+# 🛠️ Development Guide
+
+This repository provides the development environment for building the **Warp UI** components mentioned above.
 
 ## Project Structure
 
@@ -10,34 +53,26 @@ src/apps/<appname>/
   styles.css      # App styles (Tailwind)
 ```
 
-## Build an App
+## 🏗️ Build an App
 
 ```bash
 node build.js <appname>
 ```
 
-Outputs: `dist/<appname>.html` - Single standalone HTML file ready for ChatGPT Apps
+Outputs: `dist/<appname>.html` - Single standalone HTML file ready for ChatGPT Apps.
 
-## Serve Apps
+## 🖥️ Serve Apps
 
 ```bash
 node server.js
 ```
 
-Server serves the HTML file directly with optional live reload in dev mode.
-
 Access at: `http://localhost:3000/<appname>`
 
-## Example Apps
-
-- `hello` - Hello world with OpenAI Apps SDK components
-- `counter` - Simple counter with state management
-- `example` - Demonstrates using `useToolOutput` hook
-
-## Creating a New App
+## ⚡ Creating a New App
 
 1. Create directory: `src/apps/myapp/`
-2. Add `index.tsx` with React component that mounts to `root` element
+2. Add `index.tsx` with a React component that mounts to the `root` element.
 3. Add `styles.css`:
    ```css
    @import 'tailwindcss';
@@ -46,66 +81,25 @@ Access at: `http://localhost:3000/<appname>`
    ```
 4. Build: `node build.js myapp`
 5. Serve: `node server.js`
-6. Access: `http://localhost:3000/myapp`
 
-## Using the Tool Output Hook
+## 🎣 Using the Tool Output Hook
 
-Access data from ChatGPT using the `useToolOutput` hook:
+Access data from the AI using the `useToolOutput` hook:
 
 ```tsx
 import { useToolOutput } from '../../lib/hooks'
 
-interface MyData {
-  message: string
-  items: string[]
-}
-
 function App() {
   const data = useToolOutput<MyData>()
-
-  return (
-    <div>
-      <p>{data?.message}</p>
-      <ul>
-        {data?.items?.map(item => <li key={item}>{item}</li>)}
-      </ul>
-    </div>
-  )
+  return <div>{data?.message}</div>
 }
 ```
 
-The hook automatically reads from `window.openai.toolOutput` which is injected by ChatGPT when your app runs in the iframe.
+The hook automatically reads from `window.openai.toolOutput` which is injected by the host platform.
 
-## Bundle Specifications
+## 📦 Bundle Specifications
 
-- Built with Vite for optimal performance
-- Format: Single standalone HTML file with full document structure
-- Structure follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe)
-- **Dark mode support**: Automatically adapts to ChatGPT's theme via `window.openai.theme`
-- **Minified**: JavaScript and CSS minified with esbuild for optimal size
-- OpenAI Apps SDK UI styles included with `light-dark()` CSS functions
-- Tailwind CSS purged to only used classes
-- **~300-370KB per app** (includes React, ReactDOM, OpenAI SDK UI, Tailwind)
-  - Gzipped: ~80-100KB for faster downloads
-- Compatible with ChatGPT iframe sandbox
-- Ready to upload to GitHub and use directly
-
-### Dark Mode
-
-All apps automatically support dark mode through:
-- `data-theme` attribute on the `<html>` element (values: `light`, `dark`, `auto`)
-- `color-scheme` meta tag for native browser dark mode
-- Automatic theme detection from `window.openai.theme`
-- OpenAI Apps SDK UI components with built-in dark mode support
-
-The apps will automatically adapt when ChatGPT switches between light and dark themes.
-
-## Distribution
-
-Built apps in `dist/` are committed to the repo for static hosting. Use raw GitHub URLs to reference them in your MCP server.
-
-## ChatGPT Apps
-
-- [Apps SDK Quickstart](https://developers.openai.com/apps-sdk/quickstart) - Get started building ChatGPT apps
-- [ChatGPT Apps Documentation](https://developers.openai.com/apps-sdk) - Full docs and guides
-- [Model Context Protocol Docs](https://modelcontextprotocol.io/docs/sdk) - MCP SDK and protocol reference
+- **Single HTML**: Format follows [ChatGPT Apps format](https://developers.openai.com/apps-sdk/build/mcp-server#bundle-for-the-iframe).
+- **Dark Mode**: Automatically adapts to the host theme via `window.openai.theme`.
+- **Lightweight**: Minified JavaScript and CSS, Tailwind purged to only used classes.
+- **Standalone**: Ready to upload and use directly via raw GitHub URLs.
