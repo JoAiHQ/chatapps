@@ -6,7 +6,7 @@
 
 ChatApps are native AI applications that can be published to app stores like the ChatGPT App Store. They combine:
 
-- **Warps**: Open-source protocol for skills that act on-chain and off-chain.
+- **Warp Protocol**: Open-source protocol for skills that act on-chain and off-chain.
 - **Dynamic MCP**: JoAi automatically spins up MCP servers per Warp on demand. See [MCP documentation](https://docs.joai.ai/protocols/mcp) for details.
 - **Warp UI**: Visual representation for Warps, compatible with the ChatGPT Apps SDK.
 - **Cloud Wallet**: Full abstraction with Warp Wallets via cloud wallet providers (TEEs for wallet signatures).
@@ -27,7 +27,7 @@ ChatApps can be published to the ChatGPT App Store and other compatible platform
 
 To build ChatApps:
 
-1. Create Warps using the [Warps framework](https://docs.joai.ai/warps/general).
+1. Create Warps using the [Warp Protocol](https://docs.joai.ai/warps/general).
 2. Dynamic MCP endpoints are automatically configured by JoAi.
 3. Build Warp UI components compatible with ChatGPT Apps SDK.
 4. Set up Cloud Wallet integration.
@@ -36,7 +36,7 @@ To build ChatApps:
 ## 📚 Resources
 
 - **GitHub Repository**: [https://github.com/JoAiHQ](https://github.com/JoAiHQ) - Open-source ChatApp framework and examples.
-- **Warps Documentation**: [Warps framework](https://docs.joai.ai/warps/general)
+- **Warp Protocol Documentation**: [Warp Protocol](https://docs.joai.ai/warps/general)
 - **MCP Documentation**: [Dynamic MCP details](https://docs.joai.ai/protocols/mcp)
 
 ---
