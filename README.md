@@ -12,6 +12,15 @@ ChatApps are native AI applications that can be published to app stores like the
 - **Cloud Wallet**: Full abstraction with Warp Wallets via cloud wallet providers (TEEs for wallet signatures).
 - **Open-source ChatApp framework**: For building Warp UIs.
 
+### ☁️ Managed ChatApps Platform
+
+To simplify and accelerate deployment, [JoAi](https://joai.ai/chatapps) provides a fully managed infrastructure that eliminates the need to manage MCP servers or implement complex OAuth authentication. Warps can be:
+
+- **Directly published** to the ChatGPT App Store.
+- **Used instantly** across supported clients including Claude, Cursor, and more.
+
+The Warp Protocol and ChatApp framework come with [Skills](https://skills.md) that automate the near-instant generation of new Warps.
+
 ### ✨ Key Features
 
 - **Fast Development**: Because of the ease of use and speed in creating Warps, ChatApps are the fastest and most scalable way to create native ChatGPT Apps today.
