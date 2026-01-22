@@ -1,29 +1,23 @@
 import { Alert } from '@openai/apps-sdk-ui/components/Alert'
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 
-export type UpgradePromptData = {
-  title?: string
-  body?: string
-  paymentUrl?: string
-  ['_joai/upgrade']?: boolean
+type Props = {
+  title: string
+  description: string
+  paymentUrl: string
 }
 
-type UpgradePromptProps = {
-  data?: UpgradePromptData
-}
-
-export function UpgradePrompt({ data }: UpgradePromptProps) {
-  const paymentUrl = data?.paymentUrl
-  const title = data?.title ?? 'Upgrade to unlock this feature'
-  const message = data?.body ?? 'Upgrade to get premium features and higher limits in seconds.'
+export function UpgradePrompt(props: Props) {
+  const title = props.title ?? 'Upgrade to unlock this feature'
+  const message = props.description ?? 'Upgrade to get premium features and higher limits in seconds.'
 
   const handlePaymentClick = () => {
-    if (!paymentUrl) return
+    if (!props.paymentUrl) return
     if (window.openai?.openExternal) {
-      window.openai.openExternal({ href: paymentUrl })
+      window.openai.openExternal({ href: props.paymentUrl })
       return
     }
-    window.open(paymentUrl, '_blank', 'noopener,noreferrer')
+    window.open(props.paymentUrl, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -33,7 +27,7 @@ export function UpgradePrompt({ data }: UpgradePromptProps) {
       title={title}
       description={message}
       actions={
-        <Button color="primary" onClick={handlePaymentClick} disabled={!paymentUrl} variant="soft">
+        <Button color="primary" onClick={handlePaymentClick} disabled={!props.paymentUrl} variant="soft">
           Upgrade now
         </Button>
       }
