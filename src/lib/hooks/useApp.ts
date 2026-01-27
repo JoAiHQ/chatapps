@@ -1,6 +1,5 @@
-import { useCallback, useMemo } from 'react'
-import { Config } from '../config'
-import { useOpenAiGlobal } from './useOpenAiGlobal'
+import { useCallback, useMemo, useEffect, useState } from 'react'
+import { App } from '@modelcontextprotocol/ext-apps'
 
 export type AppExecute = (toolName: string, args?: Record<string, unknown>) => Promise<unknown>
 
@@ -37,47 +36,71 @@ function extractMeta(value: unknown): unknown | undefined {
 function findUpgradeRecord(values: unknown[]): Record<string, unknown> | undefined {
   for (const value of values) {
     const record = toRecord(value)
-    if (record && record[Config.ToolMeta.BillingUpgrade] === true) {
+    if (record && record['billing_upgrade'] === true) {
       return record
     }
   }
   return undefined
 }
 
-export function useApp<T = any>(): UseAppResult<T> {
-  const rawToolOutput = useOpenAiGlobal('toolOutput')
-  const rawMetadata = useOpenAiGlobal('toolResponseMetadata')
-  const structuredData = useMemo(() => unwrapStructuredContent(rawToolOutput), [rawToolOutput])
+export function useApp<T = any>(app: App): UseAppResult<T> {
+  const [toolResult, setToolResult] = useState<unknown | null>(null)
+  const structuredData = useMemo(() => {
+    if (!toolResult) return undefined
+    return unwrapStructuredContent(toolResult)
+  }, [toolResult])
   const data = useMemo(() => structuredData as T | undefined, [structuredData])
 
   const upgradeRecord = useMemo(
-    () => findUpgradeRecord([structuredData, rawToolOutput, rawMetadata]),
-    [rawMetadata, rawToolOutput, structuredData]
+    () => findUpgradeRecord([structuredData, toolResult]),
+    [structuredData, toolResult]
   )
   const meta = useMemo(
-    () => extractMeta(structuredData) ?? extractMeta(rawToolOutput) ?? rawMetadata ?? upgradeRecord,
-    [structuredData, rawToolOutput, rawMetadata, upgradeRecord]
+    () => extractMeta(structuredData) ?? extractMeta(toolResult) ?? toolResult ?? upgradeRecord,
+    [structuredData, toolResult, upgradeRecord]
   )
 
   const execute = useCallback<AppExecute>(async (toolName, args = {}) => {
-    if (!window.openai?.callTool) {
-      throw new Error('OpenAI callTool is not available.')
-    }
-    return window.openai.callTool(toolName, args)
-  }, [])
+    const result = await app.callServerTool({ name: toolName, arguments: args })
+    setToolResult(result)
+    return result
+  }, [app])
 
   const sendFollowUp = useCallback(async (prompt: string) => {
-    if (!window.openai?.sendFollowUpMessage) {
-      throw new Error('OpenAI sendFollowUpMessage is not available.')
+    await app.sendMessage({
+      role: 'user',
+      content: [{ type: 'text', text: prompt }],
+    })
+  }, [app])
+
+  useEffect(() => {
+    const handleToolInput = (params: any) => {
+      console.log('Tool input:', params.arguments)
+      setToolResult(params)
     }
-    return window.openai.sendFollowUpMessage({ prompt })
-  }, [])
+
+    const handleToolResult = (params: any) => {
+      setToolResult(params)
+    }
+
+    if (app) {
+      app.ontoolinput = handleToolInput
+      app.ontoolresult = handleToolResult
+    }
+
+    return () => {
+      if (app) {
+        app.ontoolinput = () => {}
+        app.ontoolresult = () => {}
+      }
+    }
+  }, [app])
 
   return {
     data,
     paymentRequired: Boolean(upgradeRecord),
     executeTool: execute,
     executePrompt: sendFollowUp,
-    meta: meta,
+    meta,
   }
 }

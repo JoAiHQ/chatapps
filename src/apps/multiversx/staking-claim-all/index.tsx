@@ -91,7 +91,7 @@ function Main() {
       </div>
       <div className="space-y-3">
         <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">Claims</h2>
-        {data.CLAIMS.map((claim, idx) => (
+        {data.CLAIMS.map((claim: any, idx: number) => (
           <ClaimCard key={`${claim.provider}-${idx}`} claim={claim} />
         ))}
       </div>

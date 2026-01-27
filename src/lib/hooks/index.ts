@@ -1,5 +1,6 @@
 export type * from './types'
-export * from './useOpenAiGlobal'
+
+// MCP Apps hooks
+export * from './useMcpGlobal'
 export * from './useApp'
-export * from './useToolOutput'
-export * from './useWidgetState'
+export * from './useMcpWidgetState'

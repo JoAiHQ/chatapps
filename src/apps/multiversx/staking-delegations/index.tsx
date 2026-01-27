@@ -179,7 +179,7 @@ export function Main() {
       )}
       <div className="space-y-3">
         <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">Delegations</h2>
-        {data.DELEGATIONS.map((delegation, idx) => (
+        {data.DELEGATIONS.map((delegation: any, idx: number) => (
           <DelegationCard key={`${delegation.contract}-${idx}`} delegation={delegation} executeTool={executeTool} />
         ))}
       </div>

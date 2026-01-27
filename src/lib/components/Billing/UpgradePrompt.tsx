@@ -13,10 +13,6 @@ export function UpgradePrompt(props: Props) {
 
   const handlePaymentClick = () => {
     if (!props.paymentUrl) return
-    if (window.openai?.openExternal) {
-      window.openai.openExternal({ href: props.paymentUrl })
-      return
-    }
     window.open(props.paymentUrl, '_blank', 'noopener,noreferrer')
   }
 

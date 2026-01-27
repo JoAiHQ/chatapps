@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { App } from '../../../../lib/components'
-import { setToolOutput } from '../../../../test/mockOpenAi'
+import { AppContext } from '../../../../lib/components/App'
 import { Main } from '../index'
 
 const structuredDelegations = {
@@ -27,22 +26,20 @@ const structuredDelegations = {
   PROVIDER_COUNT: 2,
 }
 
+const mockContext = {
+  data: structuredDelegations,
+  paymentRequired: false,
+  executeTool: async () => ({}),
+  executePrompt: async () => {},
+  meta: undefined,
+}
+
 describe('staking delegations app', () => {
   it('renders when tool output is wrapped in structuredContent', () => {
-    setToolOutput({
-      content: [
-        {
-          type: 'text',
-          text: 'Found 2 delegation(s).',
-        },
-      ],
-      structuredContent: structuredDelegations,
-    })
-
     render(
-      <App>
+      <AppContext.Provider value={mockContext}>
         <Main />
-      </App>
+      </AppContext.Provider>
     )
 
     expect(screen.getByText('Your staked eGold')).toBeInTheDocument()

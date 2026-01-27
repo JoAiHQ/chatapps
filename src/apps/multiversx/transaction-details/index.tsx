@@ -171,7 +171,7 @@ function Main() {
                 Smart Contract Results
               </dt>
               <div className="space-y-1 max-h-32 overflow-y-auto">
-                {data.SMART_CONTRACT_RESULTS.map((result, idx) => (
+                {data.SMART_CONTRACT_RESULTS.map((result: string, idx: number) => (
                   <Tooltip key={idx} content={result}>
                     <dd className="font-mono text-xs break-all cursor-help">{shortenHash(result)}</dd>
                   </Tooltip>
